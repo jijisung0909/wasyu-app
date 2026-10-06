@@ -1551,8 +1551,14 @@ mark{
     color:#d9484d;
 }
 
+.role-badge.ai{
+    background:rgba(124,92,246,.15);
+    color:#6d4bd6;
+}
+
 body.dark .role-badge.admin{color:#7ea9ff}
 body.dark .role-badge.operator{color:#ff8f92}
+body.dark .role-badge.ai{color:#b7a2ff}
 
 /* 역할 관리 박스 */
 .role-manage{
@@ -2677,6 +2683,7 @@ footer{
 <button type="button" data-role="member" onclick="setUserRole(currentProfileUserId,'member')">멤버</button>
 <button type="button" data-role="admin" onclick="setUserRole(currentProfileUserId,'admin')">관리자</button>
 <button type="button" data-role="operator" onclick="setUserRole(currentProfileUserId,'operator')">운영자</button>
+<button type="button" data-role="ai" onclick="setUserRole(currentProfileUserId,'ai')">AI</button>
 </div>
 </div>
 
@@ -3059,6 +3066,11 @@ Supabase DB 연결 버전 · 게시글/댓글 공유 저장
 <!-- LOGIN -->
 <div id="authLoginPane">
 <input id="loginEmail" type="email" placeholder="이메일">
+<select id="loginSlot" title="계정 번호" aria-label="계정 번호">
+<option value="1">계정 1 (기본)</option>
+<option value="2">계정 2</option>
+<option value="3">계정 3</option>
+</select>
 <input id="loginPw" type="password" placeholder="비밀번호"
        onkeydown="if(event.key==='Enter')doLogin()">
 <div class="modal-buttons">
@@ -3070,6 +3082,12 @@ Supabase DB 연결 버전 · 게시글/댓글 공유 저장
 <!-- SIGNUP -->
 <div id="authSignupPane" style="display:none">
 <input id="signupEmail" type="email" placeholder="이메일">
+<select id="signupSlot" title="계정 번호" aria-label="계정 번호">
+<option value="1">계정 1 (기본)</option>
+<option value="2">계정 2</option>
+<option value="3">계정 3</option>
+</select>
+<div style="font-size:12px;color:var(--sub);margin:-4px 0 8px">한 이메일로 최대 3개 계정을 만들 수 있어요. 인증 메일은 같은 받은편지함으로 도착합니다.</div>
 <input id="signupPw" type="password" placeholder="비밀번호 (6자 이상)">
 <input id="signupPw2" type="password" placeholder="비밀번호 확인">
 <input id="signupNickname" maxlength="20" placeholder="닉네임">
@@ -3377,7 +3395,8 @@ let rolesMap={};
 const ROLE_META={
     member:{label:"멤버",icon:"👤"},
     admin:{label:"관리자",icon:"🛡️"},
-    operator:{label:"운영자",icon:"👑"}
+    operator:{label:"운영자",icon:"👑"},
+    ai:{label:"AI",icon:"🤖"}
 };
 
 /* 해당 회원(id)의 역할. 기본값 member */
@@ -3550,9 +3569,29 @@ function switchAuthTab(tab){
 
 }
 
+/* 한 이메일로 최대 3개 계정: 계정 번호(slot)에 따라
+   실제 Supabase 인증 이메일을 변환한다.
+   - slot 1 : 원본 이메일 그대로
+   - slot 2 : local+2@domain
+   - slot 3 : local+3@domain
+   +주소(sub-addressing)는 같은 받은편지함으로 도착하므로
+   한 메일함으로 3개 계정을 각각 인증할 수 있다. */
+function accountEmail(email,slot){
+    const s=parseInt(slot,10)||1;
+    if(s<=1)return email;
+    const at=email.lastIndexOf("@");
+    if(at<0)return email;
+    const local=email.slice(0,at);
+    const domain=email.slice(at+1);
+    const plus=local.indexOf("+");
+    const base=plus>=0?local.slice(0,plus):local;
+    return base+"+"+s+"@"+domain;
+}
+
 async function doLogin(){
 
     const idInput=document.getElementById("loginEmail").value.trim();
+    const slot=(document.getElementById("loginSlot")||{}).value||"1";
     const pw=document.getElementById("loginPw").value;
 
     if(!idInput||!pw){
@@ -3560,7 +3599,9 @@ async function doLogin(){
         return;
     }
 
-    const{data,error}=await db.auth.signInWithPassword({email:idInput,password:pw});
+    const authEmail=accountEmail(idInput,slot);
+
+    const{data,error}=await db.auth.signInWithPassword({email:authEmail,password:pw});
 
     if(error){
         uiAlert("로그인 실패: "+error.message);
@@ -3577,6 +3618,7 @@ async function doLogin(){
 async function doSignup(){
 
     const email=document.getElementById("signupEmail").value.trim();
+    const slot=(document.getElementById("signupSlot")||{}).value||"1";
     const pw=document.getElementById("signupPw").value;
     const pw2=document.getElementById("signupPw2").value;
     const nickname=document.getElementById("signupNickname").value.trim();
@@ -3611,7 +3653,7 @@ async function doSignup(){
     }
 
     const{data,error}=await db.auth.signUp({
-        email,
+        email:accountEmail(email,slot),
         password:pw,
         options:{
             data:{
@@ -6576,6 +6618,8 @@ function renderDashboard(){
                             onclick="dashSetRole('${idEsc}','admin')">관리자</button>
                         <button class="${current==="operator"?"active":""}"
                             onclick="dashSetRole('${idEsc}','operator')">운영자</button>
+                        <button class="${current==="ai"?"active":""}"
+                            onclick="dashSetRole('${idEsc}','ai')">AI</button>
                     </div>
                 </div>`;
             })
