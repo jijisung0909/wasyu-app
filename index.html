@@ -3171,17 +3171,29 @@ async function loadEverythingFromDB(){
 
     try{
 
-        const[pRes,cRes,rRes,roRes]=await Promise.all([
+        const[pRes,cRes,rRes,roRes,prRes]=await Promise.all([
             db.from("posts").select("*").order("created_at",{ascending:false}),
             db.from("comments").select("*").order("created_at",{ascending:true}),
             db.from("reactions").select("target_type,target_id,kind"),
-            db.from("roles").select("user_id,role")
+            db.from("roles").select("user_id,role"),
+            db.from("profiles").select("user_id,nickname")
         ]);
 
         if(pRes.error||cRes.error||rRes.error){
             console.error("[DB] load error",
                 pRes.error||cRes.error||rRes.error);
             return null;
+        }
+
+        /* 가입만 하고 활동 없는 회원도 목록·검색·통계에 잡히도록
+           profiles 테이블을 전역 회원 목록으로 보관한다. */
+        if(!prRes.error&&Array.isArray(prRes.data)){
+            profilesMembers=prRes.data
+                .filter(r=>r&&r.user_id)
+                .map(r=>({
+                    id:r.user_id,
+                    nickname:(r.nickname||"").trim()||"회원"
+                }));
         }
 
         /* 역할 맵 구성(member/admin/operator) */
@@ -3392,6 +3404,15 @@ let isAdmin=false;
 /* 역할 시스템: user_id(=authorId, 예 "auth_<uuid>") -> role */
 let rolesMap={};
 
+/* 가입한 전체 회원 목록(profiles 테이블): [{id, nickname}] */
+let profilesMembers=[];
+
+/* user_id -> 닉네임 (profiles 기반) */
+function nicknameOfProfile(id){
+    const hit=profilesMembers.find(p=>p.id===id);
+    return hit?hit.nickname:null;
+}
+
 const ROLE_META={
     member:{label:"멤버",icon:"👤"},
     admin:{label:"관리자",icon:"🛡️"},
@@ -3469,6 +3490,12 @@ function applyAuthUser(u){
 
         userId="auth_"+authUser.id;
 
+        /* 실제 가입일 = Supabase 계정 생성 시각 */
+        if(authUser.created_at){
+            joinDate=authUser.created_at;
+            localStorage.setItem("Nthnet_join_date",joinDate);
+        }
+
         const meta=authUser.user_metadata||{};
         /* 계정에 저장된 프로필을 로그인 시 복원합니다.
            (닉네임·아바타 이모지·프로필 사진·소개) */
@@ -3487,6 +3514,10 @@ function applyAuthUser(u){
 
         if(typeof meta.bio==="string")
             localStorage.setItem("Nthnet_bio",meta.bio);
+
+        /* 닉네임 유일성 테이블(profiles)에 현재 닉네임 동기화 */
+        if(meta.nickname)
+            syncProfile(meta.nickname);
 
     }else{
 
@@ -3567,6 +3598,52 @@ function switchAuthTab(tab){
     document.getElementById("authSignupPane")
         .style.display=login?"none":"block";
 
+}
+
+/* =========================================================
+   닉네임 중복 방지 (profiles 테이블 기반)
+   - profiles(user_id, nickname) 테이블 + lower(nickname) 유일 인덱스
+   - 가입/닉네임 변경 시 중복을 검사한다(DB 유일 제약이 최종 방어).
+========================================================= */
+
+/* 닉네임이 이미 사용 중인지 검사(대소문자 무시). excludeId는 본인 제외용 */
+async function isNicknameTaken(nickname,excludeId){
+    const name=(nickname||"").trim();
+    if(!name)return false;
+    try{
+        const esc=name.replace(/([%_])/g,"\\$1");
+        const{data,error}=await db
+            .from("profiles")
+            .select("user_id,nickname")
+            .ilike("nickname",esc)
+            .limit(20);
+        if(error){
+            console.error("[DB] nickname check",error);
+            return false; /* 조회 실패 시 가입을 막지 않음 */
+        }
+        const low=name.toLowerCase();
+        return (data||[]).some(r=>
+            String(r.nickname||"").trim().toLowerCase()===low&&
+            r.user_id!==excludeId
+        );
+    }catch(e){
+        console.error("[DB] nickname check",e);
+        return false;
+    }
+}
+
+/* 현재 로그인 사용자의 닉네임을 profiles 테이블에 반영 */
+async function syncProfile(nickname){
+    const name=(nickname||"").trim();
+    if(!authUser||!name)return;
+    try{
+        await db.from("profiles").upsert(
+            {user_id:userId,nickname:name},
+            {onConflict:"user_id"}
+        );
+    }catch(e){
+        console.error("[DB] profile sync",e);
+    }
 }
 
 /* 한 이메일로 최대 3개 계정: 계정 번호(slot)에 따라
@@ -3652,6 +3729,12 @@ async function doSignup(){
         return;
     }
 
+    /* 닉네임 중복 검사 */
+    if(await isNicknameTaken(nickname,null)){
+        uiAlert("이미 사용 중인 닉네임입니다. 다른 닉네임을 입력해 주세요.");
+        return;
+    }
+
     const{data,error}=await db.auth.signUp({
         email:accountEmail(email,slot),
         password:pw,
@@ -3677,6 +3760,7 @@ async function doSignup(){
     if(data.session){
 
         applyAuthUser(data.user);
+        syncProfile(nickname);
         closeAuth();
         uiSuccess("회원가입이 완료되어 로그인되었습니다.");
         renderPosts();
@@ -6526,6 +6610,9 @@ function collectAllMembers(){
     /* 역할만 부여된(글 없는) 회원도 포함 */
     Object.keys(rolesMap).forEach(id=>add(id,null));
 
+    /* 가입만 하고 활동 없는 회원도 포함(profiles) */
+    profilesMembers.forEach(p=>add(p.id,p.nickname));
+
     return Object.values(map);
 
 }
@@ -7229,6 +7316,10 @@ function getMatchedUsers(keyword){
         });
 
     });
+
+
+    /* 가입만 하고 활동 없는 회원도 검색에 포함(profiles) */
+    profilesMembers.forEach(p=>consider(p.id,p.nickname));
 
 
     return result;
@@ -8665,7 +8756,7 @@ function closeNickname(){
 }
 
 
-function saveNickname(){
+async function saveNickname(){
 
     const nickname=
         document.getElementById(
@@ -8678,6 +8769,13 @@ function saveNickname(){
         uiAlert("닉네임을 입력하세요.");
         return;
 
+    }
+
+
+    /* 닉네임 중복 검사(본인 제외) */
+    if(await isNicknameTaken(nickname,userId)){
+        uiAlert("이미 사용 중인 닉네임입니다. 다른 닉네임을 입력해 주세요.");
+        return;
     }
 
 
@@ -8816,6 +8914,9 @@ function saveNickname(){
             if(uRes.error){
                 console.error("[AUTH] profile save",uRes.error);
             }
+
+            /* profiles 테이블 닉네임 동기화(중복 방지 근거) */
+            await syncProfile(nickname);
 
             const pRes=await db.from("posts")
                 .update(profile)
