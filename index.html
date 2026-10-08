@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
+<meta name="google-site-verification" content="5N-zky6cKI_qwo4N44sZrqNZHfwqg7kF_pM82xZx2BE" />
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>엔쓰넷</title>
@@ -843,7 +844,10 @@ mark{
 .profile-avatar img{
     width:100%;
     height:100%;
+    display:block;
     object-fit:cover;
+    object-position:center;
+    border-radius:50%;
 }
 
 .profile-name{
@@ -1119,6 +1123,16 @@ mark{
     background:var(--point-light);
     color:var(--point);
     font-weight:900;
+    overflow:hidden;
+}
+
+.user-avatar img{
+    width:100%;
+    height:100%;
+    display:block;
+    object-fit:cover;
+    object-position:center;
+    border-radius:50%;
 }
 
 .user-info{
@@ -2211,9 +2225,20 @@ footer{
 .spotify-np-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
 .spotify-np-title{font-weight:800}
 .spotify-np-status{font-size:12px;color:var(--sub)}
-.spotify-np-body{display:flex;align-items:center;gap:14px;min-height:64px}
-.spotify-np-cover{width:64px;height:64px;border-radius:8px;object-fit:cover;background:var(--line);flex:none}
+.spotify-np-body{display:flex;align-items:center;gap:22px;min-height:190px;padding:10px 4px}
+.spotify-cd-wrap{position:relative;width:170px;height:170px;flex:none;display:grid;place-items:center}
+.spotify-cd-wrap::before{content:"";position:absolute;inset:-8px;border-radius:50%;background:conic-gradient(from 20deg,rgba(30,215,96,.9),rgba(255,255,255,.12),rgba(30,215,96,.25),rgba(255,255,255,.08),rgba(30,215,96,.9));filter:blur(7px);opacity:.5}
+.spotify-cd{position:relative;width:170px;height:170px;border-radius:50%;object-fit:cover;background:#151515;flex:none;box-shadow:0 12px 30px rgba(0,0,0,.3),inset 0 0 0 8px rgba(255,255,255,.08);animation:spotifyCdSpin 7s linear infinite}
+.spotify-cd::after{content:""}
+.spotify-cd-wrap .spotify-cd-hole{position:absolute;width:42px;height:42px;border-radius:50%;background:var(--card,#111);border:7px solid rgba(255,255,255,.25);box-shadow:0 0 0 2px rgba(0,0,0,.35);z-index:2;pointer-events:none}
+.spotify-cd-wrap.paused .spotify-cd{animation-play-state:paused}
+.spotify-cd-wrap.paused::before{opacity:.22}
+@keyframes spotifyCdSpin{to{transform:rotate(360deg)}}
 .spotify-np-info{min-width:0;flex:1}
+.spotify-np-track{font-size:21px;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.spotify-np-artist{margin-top:7px;color:var(--sub);font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.spotify-np-album{margin-top:4px;color:var(--sub);font-size:12px;opacity:.8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.spotify-np-link{display:inline-flex;margin-top:14px;font-size:12px;color:#1db954;text-decoration:none;font-weight:800}
 .spotify-np-track{font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .spotify-np-artist{margin-top:4px;color:var(--sub);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .spotify-np-link{display:inline-flex;margin-top:7px;font-size:12px;color:#1db954;text-decoration:none;font-weight:700}
@@ -2225,11 +2250,824 @@ footer{
 .spotify-controls .spotify-play-btn{width:44px;height:44px;font-size:18px;background:#1db954;color:#fff;border:0}
 .spotify-controls input[type=range]{flex:1;accent-color:#1db954}
 
+
+.other-spotify-card{margin-top:10px;padding:14px;border:1px solid var(--line,#ddd);border-radius:16px;background:var(--card,#fff);overflow:hidden}
+.other-spotify-head{display:flex;align-items:center;justify-content:space-between;font-size:13px;font-weight:800;margin-bottom:4px}
+.other-spotify-live{color:#1db954;font-size:11px;letter-spacing:.5px}
+.other-spotify-main{display:flex;align-items:center;gap:18px;padding:8px 2px}
+.other-spotify-info{min-width:0;flex:1}
+.other-spotify-track{font-size:18px;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.other-spotify-artist{margin-top:6px;font-size:13px;color:var(--sub,#888);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.other-spotify-album{margin-top:3px;font-size:12px;color:var(--sub,#888);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.other-spotify-link{display:inline-flex;margin-top:11px;color:#1db954;font-size:12px;font-weight:800;text-decoration:none}
+.spotify-search{margin-top:14px;border-top:1px solid rgba(255,255,255,.08);padding-top:14px}
+.spotify-search-row{display:flex;gap:8px}
+.spotify-search-row input{flex:1;min-width:0;padding:11px 12px;border:1px solid rgba(255,255,255,.12);border-radius:10px;background:rgba(255,255,255,.05);color:inherit;outline:none}
+.spotify-search-row button{padding:0 15px;border:0;border-radius:10px;cursor:pointer;background:#1ed760;color:#07120b;font-weight:700}
+.spotify-search-status{font-size:12px;opacity:.65;margin:8px 2px}
+.spotify-search-results{display:flex;flex-direction:column;gap:7px;max-height:360px;overflow:auto}
+.spotify-search-item{display:flex;align-items:center;gap:10px;padding:8px;border-radius:10px;background:rgba(255,255,255,.045);cursor:pointer;text-align:left;border:1px solid transparent}
+.spotify-search-item:hover{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.1)}
+.spotify-search-cover{width:48px;height:48px;border-radius:7px;object-fit:cover;flex:none}
+.spotify-search-info{min-width:0;flex:1}
+.spotify-search-track{font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.spotify-search-artist{font-size:12px;opacity:.7;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.spotify-search-play{font-size:18px;opacity:.8}
+.spotify-cd-wrap{transform-origin:center}
+@media(max-width:600px){.spotify-np-body{gap:16px;min-height:150px}.spotify-cd-wrap,.spotify-cd{width:135px;height:135px}.spotify-cd-wrap .spotify-cd-hole{width:34px;height:34px;border-width:6px}.spotify-np-track{font-size:17px}.other-spotify-main{gap:14px}.other-spotify-card .spotify-cd-wrap,.other-spotify-card .spotify-cd{width:120px;height:120px}.other-spotify-card .spotify-cd-hole{width:30px;height:30px;border-width:5px}}
+
+/* =========================================================
+   상단 고정 공지
+========================================================= */
+.notice-banner{
+    display:none;
+    margin:0 0 14px;
+    padding:14px 16px;
+    border:1px solid var(--line);
+    border-left:4px solid var(--point);
+    border-radius:14px;
+    background:var(--card);
+    box-shadow:0 5px 18px rgba(0,0,0,.06);
+}
+.notice-banner.show{display:block}
+.notice-banner{cursor:pointer}
+.notice-banner:hover{border-color:var(--point);box-shadow:0 7px 22px rgba(79,70,229,.12)}
+.notice-banner:focus-visible{outline:2px solid var(--point);outline-offset:2px}
+.notice-banner-top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.notice-banner-label{font-size:12px;font-weight:800;color:var(--point);margin-bottom:5px}
+.notice-banner-title{font-size:16px;font-weight:900;line-height:1.35}
+.notice-banner-content{margin-top:7px;color:var(--sub);font-size:13px;line-height:1.55;white-space:pre-wrap}
+.notice-banner-time{font-size:11px;color:var(--sub);white-space:nowrap}
+.notice-empty{color:var(--sub);font-size:13px}
+.announcement-admin{margin-top:18px}
+.announcement-admin-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+.announcement-admin-title{font-weight:900}
+.announcement-admin-state{font-size:12px;color:var(--sub)}
+.announcement-form{display:grid;gap:9px}
+.announcement-form input,.announcement-form textarea{width:100%;box-sizing:border-box;padding:11px 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--text);font:inherit}
+.announcement-form textarea{min-height:110px;resize:vertical}
+.announcement-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:2px}
+.announcement-actions button{border:0;border-radius:9px;padding:10px 14px;font-weight:800;cursor:pointer}
+.announcement-save{background:var(--point);color:#fff}
+.announcement-hide{background:var(--line);color:var(--text)}
+.announcement-delete{background:#d94848;color:#fff}
+@media(max-width:700px){
+    .notice-banner{padding:13px}
+    .notice-banner-top{align-items:flex-start;flex-direction:column}
+    .notice-banner-time{white-space:normal}
+}
 </style>
 
+<style>
+
+/* =========================================================
+   엔쓰넷 UI 리디자인 v2
+   기능/데이터 로직은 변경하지 않고 시각 스타일만 개선
+========================================================= */
+:root{
+  --ui-radius:16px;
+  --ui-radius-sm:11px;
+  --ui-shadow:0 8px 28px rgba(15,23,42,.06);
+  --ui-shadow-hover:0 14px 36px rgba(15,23,42,.10);
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:linear-gradient(180deg,var(--bg) 0%,var(--bg) 70%,var(--point-light) 100%)}
+
+/* 헤더 */
+.header{
+  position:sticky;top:0;z-index:1000;
+  background:color-mix(in srgb,var(--card) 92%,transparent);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border-bottom:1px solid color-mix(in srgb,var(--line) 75%,transparent);
+  box-shadow:0 4px 18px rgba(15,23,42,.04);
+}
+.header-inner{max-width:1440px;min-height:70px;padding:11px 22px;gap:24px}
+.logo{font-size:29px;letter-spacing:-1.5px;transition:transform .18s ease}
+.logo:hover{transform:translateY(-1px)}
+.search{max-width:680px}
+.search input{height:44px;border-radius:12px 0 0 12px;background:var(--bg);transition:.18s ease}
+.search input:focus{box-shadow:0 0 0 3px color-mix(in srgb,var(--point) 13%,transparent)}
+.search button{height:44px;border-radius:0 12px 12px 0}
+.ai-search-btn{margin-left:6px!important;border-radius:12px!important;width:auto!important;padding:0 13px!important;background:var(--point-light)!important;color:var(--point)!important;font-weight:800!important}
+.header-buttons{gap:6px}
+.header-buttons button{height:40px;border-radius:11px;background:var(--card);transition:transform .15s ease,background .15s ease,box-shadow .15s ease}
+.header-buttons button:hover{transform:translateY(-1px);box-shadow:0 5px 14px rgba(15,23,42,.08)}
+#authBtn{font-weight:800}
+#downloadAppBtn{border-radius:11px}
+
+/* 전체 레이아웃 */
+.container{max-width:1440px;margin:28px auto;padding:0 22px;grid-template-columns:230px minmax(0,1fr) 270px;gap:24px}
+.sidebar,.card,.right-card{border-radius:var(--ui-radius);box-shadow:var(--ui-shadow);border-color:color-mix(in srgb,var(--line) 85%,transparent)}
+.sidebar{position:sticky;top:94px;max-height:calc(100vh - 115px);overflow:auto}
+.sidebar-title{padding:19px 18px;font-size:15px}
+.gallery{padding:9px}
+.gallery button{padding:11px 13px;border-radius:10px;margin:2px 0;transition:.15s ease}
+.gallery button:hover,.gallery button.active{transform:translateX(2px)}
+.gallery-count{padding:2px 7px;border-radius:999px;background:var(--bg)}
+.gallery button.active .gallery-count{background:color-mix(in srgb,var(--point) 12%,transparent);color:var(--point)}
+
+/* 페이지 타이틀 */
+.page-title{margin:4px 0 18px;padding:0 2px}
+.page-title h1{font-size:28px;letter-spacing:-1px}
+.page-title p{font-size:13px;margin-top:7px}
+
+/* 공지 */
+.notice-banner{
+  margin:0 0 18px;padding:16px 18px;border-radius:var(--ui-radius);
+  border:1px solid color-mix(in srgb,var(--point) 22%,var(--line));
+  border-left:5px solid var(--point);
+  background:linear-gradient(135deg,var(--card),color-mix(in srgb,var(--point-light) 45%,var(--card)));
+  box-shadow:var(--ui-shadow);transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;
+}
+.notice-banner:hover{transform:translateY(-2px);box-shadow:var(--ui-shadow-hover);border-color:color-mix(in srgb,var(--point) 45%,var(--line))}
+.notice-banner-label{font-size:11px;letter-spacing:.2px;text-transform:uppercase}
+.notice-banner-title{font-size:17px;letter-spacing:-.3px}
+.notice-banner-content{font-size:13px}
+.notice-banner-time{font-size:11px}
+
+/* 메인 카드 / 탭 */
+#listPage>.card{overflow:hidden}
+.tabs{padding:7px;border-bottom:1px solid var(--line);background:color-mix(in srgb,var(--bg) 55%,var(--card));gap:4px}
+.tabs button{border-radius:10px;padding:10px 16px;font-weight:800;color:var(--sub);transition:.15s ease}
+.tabs button:hover{color:var(--text);background:var(--card)}
+.tabs button.active{background:var(--card);color:var(--point);box-shadow:0 3px 10px rgba(15,23,42,.07)}
+
+/* 게시글 */
+.post{padding:18px 20px;border-bottom:1px solid var(--line);transition:background .16s ease,padding-left .16s ease}
+.post:hover{background:color-mix(in srgb,var(--point-light) 32%,var(--card));padding-left:23px}
+.post:last-child{border-bottom:0}
+.post-title{font-size:16px;font-weight:850;letter-spacing:-.25px}
+.post-meta{font-size:12px;color:var(--sub);margin-top:7px}
+.post-category{border-radius:999px;padding:4px 8px;font-size:10px;font-weight:800;background:var(--point-light);color:var(--point)}
+
+/* 글쓰기 */
+.write-area{padding:15px 18px;border-top:1px solid var(--line);background:var(--bg)}
+.write-btn{width:100%;border:0;border-radius:12px;padding:12px 16px;background:var(--point);color:#fff;font-weight:850;box-shadow:0 7px 16px color-mix(in srgb,var(--point) 22%,transparent);transition:.16s ease}
+.write-btn:hover{transform:translateY(-1px);box-shadow:0 10px 22px color-mix(in srgb,var(--point) 28%,transparent)}
+.form{padding:20px;background:var(--bg);border-top:1px solid var(--line)}
+.form input,.form textarea,.form select{border-radius:11px!important;border:1px solid var(--line)!important;transition:.16s ease}
+.form input:focus,.form textarea:focus,.form select:focus{border-color:var(--point)!important;box-shadow:0 0 0 3px color-mix(in srgb,var(--point) 11%,transparent);outline:0}
+.form-buttons button,.comment-form button{border-radius:10px!important;font-weight:800!important}
+
+/* 상세 페이지 */
+.detail{max-width:920px;margin:0 auto}
+.back-btn{border:1px solid var(--line)!important;background:var(--card)!important;border-radius:10px!important;padding:9px 13px!important;font-weight:750;box-shadow:0 3px 10px rgba(15,23,42,.04);transition:.15s ease}
+.back-btn:hover{transform:translateX(-2px);background:var(--point-light)!important;color:var(--point)}
+.detail>.card{overflow:hidden}
+.detail-header{padding:27px 28px 22px;background:linear-gradient(180deg,var(--card),color-mix(in srgb,var(--point-light) 18%,var(--card)));border-bottom:1px solid var(--line)}
+.detail-category{display:inline-block;border-radius:999px;padding:5px 9px;background:var(--point-light);color:var(--point);font-size:11px;font-weight:850}
+.detail-title{margin-top:12px;font-size:27px;line-height:1.3;letter-spacing:-.8px}
+.detail-info{margin-top:9px;font-size:12px;color:var(--sub)}
+.detail-content{padding:28px;min-height:150px;font-size:15px;line-height:1.85;white-space:pre-wrap}
+.detail-actions{padding:13px 20px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--bg);display:flex;gap:7px;flex-wrap:wrap}
+.detail-actions button{border:1px solid var(--line);background:var(--card);border-radius:9px;padding:8px 11px;font-weight:750;transition:.15s ease}
+.detail-actions button:hover{border-color:var(--point);color:var(--point);transform:translateY(-1px)}
+.comments{padding:22px 24px}
+.comments-title{font-size:15px;font-weight:900;margin-bottom:14px}
+.comment-form{gap:8px}
+.comment-form input{border-radius:10px!important;border:1px solid var(--line)!important}
+
+/* 프로필/목록/관리자 카드 통일 */
+.profile-card,.user-item,.notification-item,.report-item,.admin-stat,.my-stat{border-radius:12px!important}
+.profile-avatar{box-shadow:0 5px 16px rgba(15,23,42,.08)}
+.admin-tabs{padding:5px;background:var(--bg);border-radius:12px;margin-bottom:14px;display:flex;gap:4px}
+.admin-tabs button{border-radius:9px!important;font-weight:750}
+.admin-tabs button.active{background:var(--card)!important;color:var(--point)!important;box-shadow:0 3px 9px rgba(15,23,42,.06)}
+
+/* 페이지 전환 */
+#detailPage.show,#myPage.show,.other-profile.show{animation:pageIn .2s ease both}
+@keyframes pageIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* 스크롤바 */
+::-webkit-scrollbar{width:9px;height:9px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:color-mix(in srgb,var(--sub) 25%,transparent);border-radius:99px}
+::-webkit-scrollbar-thumb:hover{background:color-mix(in srgb,var(--sub) 40%,transparent)}
+
+/* 모바일 */
+@media(max-width:1000px){
+  .container{grid-template-columns:190px minmax(0,1fr);gap:18px}
+}
+@media(max-width:700px){
+  .header{position:sticky}
+  .header-inner{padding:9px 10px;gap:8px}
+  .logo{font-size:23px}
+  .header-buttons{gap:4px}
+  .header-buttons button{height:37px;min-width:37px;padding:0 8px;border-radius:10px}
+  #downloadAppBtn{font-size:0;width:37px;padding:0}
+  #downloadAppBtn::before{content:'⬇️';font-size:15px}
+  .search input{height:42px}
+  .search button{height:42px}
+  .ai-search-btn{display:none!important}
+  .container{display:block;margin:13px auto;padding:0 9px}
+  .sidebar{position:static;max-height:none;margin-bottom:13px;border-radius:13px}
+  .gallery{overflow-x:auto}
+  .page-title{margin-bottom:13px}
+  .page-title h1{font-size:21px}
+  .notice-banner{padding:14px;margin-bottom:13px}
+  .post{padding:15px}
+  .post:hover{padding-left:15px}
+  .detail{max-width:none}
+  .detail-header{padding:21px 18px 18px}
+  .detail-title{font-size:21px}
+  .detail-content{padding:21px 18px;font-size:14px}
+  .detail-actions{padding:11px 13px}
+  .comments{padding:17px 15px}
+  .card,.sidebar{border-radius:14px}
+}
+@media(max-width:450px){
+  .header-buttons button{min-width:35px;padding:0 6px}
+  #authBtn{font-size:12px}
+  .notification-dot{right:1px;top:2px}
+  .post-title{font-size:15px}
+}
+
+</style>
+<style>
+
+/* =========================================================
+   ENTHNET 2.0 — TOTAL UI OVERHAUL
+   Visual-only layer: existing markup/JS/data flow preserved.
+========================================================= */
+:root{
+  --bg:#f4f6fb;
+  --card:#ffffff;
+  --text:#151827;
+  --sub:#72798c;
+  --line:#e7eaf2;
+  --point:#635bff;
+  --point-light:#f0efff;
+  --danger:#ef476f;
+  --success:#18a673;
+  --warning:#f5a524;
+  --shadow:0 14px 45px rgba(28,35,60,.08);
+  --shadow-sm:0 5px 20px rgba(28,35,60,.06);
+}
+body.dark{
+  --bg:#0b0d14;
+  --card:#121621;
+  --text:#f4f6ff;
+  --sub:#9299ac;
+  --line:#252b3b;
+  --point:#8178ff;
+  --point-light:#1d1a3b;
+  --shadow:0 18px 55px rgba(0,0,0,.32);
+  --shadow-sm:0 7px 25px rgba(0,0,0,.25);
+}
+body{
+  background:
+    radial-gradient(circle at 8% 0%,rgba(99,91,255,.10),transparent 28%),
+    radial-gradient(circle at 92% 10%,rgba(47,198,255,.07),transparent 24%),
+    var(--bg);
+  letter-spacing:-.012em;
+}
+body:before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;
+  background-image:radial-gradient(rgba(99,91,255,.06) 1px,transparent 1px);
+  background-size:22px 22px;opacity:.35;
+}
+.header{
+  background:rgba(255,255,255,.78);
+  backdrop-filter:blur(22px) saturate(150%);
+  -webkit-backdrop-filter:blur(22px) saturate(150%);
+  border-bottom:1px solid rgba(120,125,150,.14);
+  box-shadow:0 4px 30px rgba(35,40,70,.05);
+}
+body.dark .header{background:rgba(12,15,24,.78)}
+.header-inner{max-width:1500px;min-height:76px;padding:12px 28px;gap:28px}
+.logo{
+  position:relative;color:var(--text);font-size:25px;font-weight:950;letter-spacing:-.06em;
+  display:flex;align-items:center;gap:9px;
+}
+.logo:before{
+  content:"";width:11px;height:27px;border-radius:5px 9px 5px 9px;
+  background:linear-gradient(145deg,var(--point),#38bdf8);box-shadow:0 6px 16px rgba(99,91,255,.35);
+}
+.logo:after{content:"NET";font-size:9px;letter-spacing:.12em;color:var(--point);font-weight:900;align-self:flex-end;margin-bottom:5px}
+.search{max-width:690px}
+.search input{
+  height:46px;border:1px solid var(--line);border-radius:14px 0 0 14px;background:rgba(255,255,255,.72);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.5);padding:0 16px;font-size:14px;
+}
+body.dark .search input{background:rgba(255,255,255,.035)}
+.search input:focus{border-color:var(--point);box-shadow:0 0 0 4px rgba(99,91,255,.10)}
+.search button{height:46px;background:var(--point);border-radius:0 14px 14px 0;width:52px}
+.search .ai-search-btn{margin-left:7px!important;border-radius:12px!important;width:auto!important;padding:0 15px!important;background:var(--point-light)!important;color:var(--point)!important;border:1px solid rgba(99,91,255,.15)!important;font-weight:800}
+.header-buttons{gap:6px}
+.header-buttons button{
+  min-width:42px;height:42px;border-radius:12px;border:1px solid var(--line);background:var(--card);
+  box-shadow:0 2px 8px rgba(0,0,0,.025);transition:.18s ease;
+}
+.header-buttons button:hover{transform:translateY(-2px);background:var(--point-light);border-color:rgba(99,91,255,.22);box-shadow:var(--shadow-sm)}
+#downloadAppBtn{background:linear-gradient(135deg,var(--point),#8178ff);border:0;border-radius:12px;padding:0 15px;box-shadow:0 7px 18px rgba(99,91,255,.22)}
+.container{max-width:1500px;margin:30px auto;padding:0 28px;grid-template-columns:250px minmax(0,1fr) 285px;gap:24px}
+.sidebar,.card,.right-card{
+  border:1px solid rgba(120,125,150,.14);border-radius:20px;box-shadow:var(--shadow);background:rgba(255,255,255,.88);overflow:hidden;
+}
+body.dark .sidebar,body.dark .card,body.dark .right-card{background:rgba(18,22,33,.92)}
+.sidebar{position:sticky;top:100px;overflow:hidden;padding:8px}
+.sidebar-title{padding:16px 14px 13px;border:0;font-size:12px;color:var(--sub);text-transform:uppercase;letter-spacing:.12em}
+.gallery{padding:4px}
+.gallery button{padding:12px 13px;border-radius:12px;margin:2px 0;transition:.18s ease;font-size:14px}
+.gallery button:hover,.gallery button.active{background:linear-gradient(90deg,var(--point-light),transparent);color:var(--point);transform:translateX(3px)}
+.gallery-count{padding:2px 7px;border-radius:99px;background:var(--bg);font-size:10px}
+.page-title{margin:0 0 18px;padding:4px 4px}
+.page-title h1{font-size:30px;font-weight:950;letter-spacing:-.055em}
+.page-title p{font-size:13px;margin-top:7px}
+.notice-banner{
+  margin:0 0 18px;padding:18px 20px;border:1px solid rgba(99,91,255,.15);border-left:0;border-radius:18px;
+  background:linear-gradient(135deg,rgba(99,91,255,.10),rgba(56,189,248,.055));box-shadow:var(--shadow-sm);position:relative;overflow:hidden;
+}
+.notice-banner:before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:linear-gradient(180deg,var(--point),#38bdf8)}
+.notice-banner:hover{transform:translateY(-2px);box-shadow:0 16px 35px rgba(99,91,255,.12)}
+.notice-banner-title{font-size:17px}.notice-banner-content{font-size:13px}
+.tabs{padding:7px;background:var(--bg);border:0;border-radius:13px;margin:14px;gap:4px}
+.tabs button{border:0!important;border-radius:10px;padding:11px 15px;font-weight:750;transition:.18s}
+.tabs button.active{background:var(--card);box-shadow:0 4px 14px rgba(0,0,0,.07);color:var(--point)}
+#posts{padding:4px 8px 8px}
+.post{
+  margin:5px 0;padding:18px 18px 17px;border:1px solid transparent;border-radius:15px;border-bottom:0;
+  transition:.18s ease;background:transparent;
+}
+.post:hover{background:var(--card);border-color:var(--line);box-shadow:0 8px 24px rgba(30,35,65,.06);transform:translateY(-2px)}
+.post-title{font-size:16px;font-weight:850}.post-preview{font-size:13px;line-height:1.6}
+.write-area{padding:14px;border-top:1px solid var(--line);background:linear-gradient(180deg,transparent,var(--bg))}
+.write-btn{height:48px;border-radius:14px;background:linear-gradient(135deg,var(--point),#8178ff);box-shadow:0 9px 22px rgba(99,91,255,.20);font-size:14px}
+.form{border-top:1px solid var(--line);padding:22px;background:var(--bg)}
+.form input,.form textarea,.form select{border-radius:13px;padding:13px;border-color:var(--line);background:var(--card)}
+.form textarea{min-height:220px}
+.right-card{margin-bottom:18px}
+.right-title{padding:17px 18px;border-bottom:1px solid var(--line);font-size:13px;font-weight:900}
+.right-list{padding:8px}
+.detail .card{overflow:hidden}
+.back-btn{margin:0 0 14px;padding:8px 4px;color:var(--sub);transition:.15s}
+.back-btn:hover{color:var(--point);transform:translateX(-3px)}
+.detail-header{padding:30px 30px 24px;background:linear-gradient(135deg,var(--point-light),transparent 55%);border-bottom:1px solid var(--line)}
+.detail-category{display:inline-flex;padding:5px 9px;border-radius:99px;background:var(--point);color:#fff;font-size:11px}
+.detail-title{font-size:30px;line-height:1.25;margin:13px 0 12px;letter-spacing:-.05em}
+.detail-info{font-size:12px}
+.detail-content{min-height:300px;padding:32px 30px;font-size:15px;line-height:1.95}
+.detail-actions{padding:16px;border-top:1px solid var(--line);background:var(--bg)}
+.detail-actions button{border-radius:11px;padding:10px 15px;background:var(--card);transition:.15s}
+.detail-actions button:hover{transform:translateY(-2px);box-shadow:var(--shadow-sm)}
+.comments{padding:24px 30px}.comments-title{font-size:16px}
+.comment{padding:17px 0}.comment-form input{border-radius:12px}.comment-form button{border-radius:12px;background:var(--point)}
+.profile-card,.my-stats,.user-list,.admin-tabs,.admin-stats{border-radius:18px}
+.profile-avatar{box-shadow:0 10px 24px rgba(99,91,255,.18)}
+.mypage .card,.other-profile .card{margin-bottom:18px}
+.pagination button{border-radius:10px!important}
+.footer{margin-top:40px}
+/* modals */
+.modal{backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.modal-content{border-radius:22px!important;box-shadow:0 25px 80px rgba(0,0,0,.22)!important;border:1px solid var(--line)!important}
+/* subtle section reveal */
+.card,.sidebar,.right-card,.notice-banner{animation:enthnetIn .35s ease both}
+@keyframes enthnetIn{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
+@media(max-width:1000px){
+  .container{grid-template-columns:210px minmax(0,1fr);gap:18px;padding:0 18px}
+}
+@media(max-width:700px){
+  .header-inner{padding:10px 12px;gap:8px}.logo{font-size:21px}.logo:after{display:none}
+  .header-buttons button{height:38px;min-width:38px;border-radius:10px}.header-buttons #downloadAppBtn{display:none}
+  .container{display:block;margin:15px auto;padding:0 10px}.sidebar{position:relative;top:auto;margin-bottom:13px;border-radius:16px}
+  .page-title h1{font-size:24px}.card,.right-card{border-radius:16px}
+  .notice-banner{border-radius:15px;padding:15px}.detail-header{padding:23px 19px}.detail-title{font-size:23px}.detail-content{padding:24px 19px;min-height:220px}
+  .comments{padding:18px}.post{padding:16px 13px}.tabs{margin:10px}
+}
+@media(max-width:450px){
+  .header-buttons{gap:3px}.header-buttons button{min-width:35px;padding:0 6px}.search input{font-size:13px}.search .ai-search-btn{padding:0 10px!important}
+}
+
+</style>
+<style>
+/* ===== ENTHNET CUSTOM CONTEXT MENU ===== */
+#enthContextMenu{
+    position:fixed;
+    z-index:99999;
+    min-width:210px;
+    padding:7px;
+    display:none;
+    background:rgba(255,255,255,.94);
+    border:1px solid rgba(109,92,220,.14);
+    border-radius:14px;
+    box-shadow:0 18px 48px rgba(43,35,91,.16),0 4px 12px rgba(43,35,91,.08);
+    backdrop-filter:blur(18px) saturate(150%);
+    -webkit-backdrop-filter:blur(18px) saturate(150%);
+    animation:enthContextIn .14s cubic-bezier(.2,.8,.2,1);
+    transform-origin:top left;
+}
+body.dark #enthContextMenu{
+    background:rgba(28,25,38,.96);
+    border-color:rgba(157,139,255,.16);
+    box-shadow:0 18px 48px rgba(0,0,0,.38);
+}
+#enthContextMenu.show{display:block}
+@keyframes enthContextIn{
+    from{opacity:0;transform:scale(.96) translateY(-3px)}
+    to{opacity:1;transform:scale(1) translateY(0)}
+}
+.enth-context-head{
+    padding:8px 10px 7px;
+    color:var(--sub,#777b85);
+    font-size:10px;
+    font-weight:800;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+}
+.enth-context-item{
+    width:100%;
+    min-height:38px;
+    display:flex;
+    align-items:center;
+    gap:11px;
+    padding:9px 10px;
+    border:0;
+    border-radius:9px;
+    background:transparent;
+    color:var(--text,#202124);
+    text-align:left;
+    font-size:13px;
+    font-weight:600;
+    cursor:pointer;
+    transition:background .15s ease,color .15s ease,transform .15s ease;
+}
+.enth-context-item:hover{
+    background:linear-gradient(90deg,#eef2ff,#f3f0ff);
+    color:#5546d8;
+    transform:translateX(2px);
+}
+body.dark .enth-context-item:hover{
+    background:linear-gradient(90deg,#252a4b,#29233e);
+    color:#a99aff;
+}
+.enth-context-icon{
+    width:25px;
+    height:25px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex:0 0 25px;
+    border-radius:8px;
+    background:#f1f3ff;
+    color:#5b50dc;
+    font-size:13px;
+}
+body.dark .enth-context-icon{
+    background:#292541;
+    color:#a99aff;
+}
+.enth-context-item.danger:hover{
+    background:#fff0f2;
+    color:#dc3e5b;
+}
+.enth-context-item.danger .enth-context-icon{
+    background:#fff0f2;
+    color:#dc3e5b;
+}
+.enth-context-sep{
+    height:1px;
+    margin:6px 5px;
+    background:var(--line,#e4e6eb);
+}
+</style>
+<style>
+/* Context menu post actions */
+#ctxPostActions .enth-context-item:first-child:hover{
+    background:linear-gradient(90deg,#eefcf5,#eef8ff);
+    color:#27885d;
+}
+#ctxPostActions .enth-context-item:nth-child(2):hover{
+    background:#f3f4f8;
+    color:#687080;
+}
+#ctxPostActions .enth-context-item:nth-child(3):hover{
+    background:linear-gradient(90deg,#eef2ff,#f3f0ff);
+    color:#5546d8;
+}
+</style>
+<style>
+/* ===== ENTHNET OFFLINE / WIFI GUIDE ===== */
+#enthOfflineOverlay{
+    position:fixed;
+    inset:0;
+    z-index:100000;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    background:rgba(19,22,35,.28);
+    backdrop-filter:blur(7px);
+    -webkit-backdrop-filter:blur(7px);
+    animation:enthOfflineFade .2s ease;
+}
+#enthOfflineOverlay.show{display:flex}
+@keyframes enthOfflineFade{
+    from{opacity:0}
+    to{opacity:1}
+}
+.enth-offline-box{
+    width:min(430px,calc(100vw - 40px));
+    padding:30px;
+    border:1px solid rgba(111,91,225,.14);
+    border-radius:24px;
+    background:rgba(255,255,255,.96);
+    box-shadow:0 24px 70px rgba(38,31,82,.2),0 5px 20px rgba(38,31,82,.08);
+    text-align:center;
+    animation:enthOfflineUp .24s cubic-bezier(.2,.8,.2,1);
+}
+body.dark .enth-offline-box{
+    background:rgba(27,25,36,.97);
+    border-color:rgba(155,137,255,.17);
+    box-shadow:0 24px 70px rgba(0,0,0,.42);
+}
+@keyframes enthOfflineUp{
+    from{opacity:0;transform:translateY(10px) scale(.97)}
+    to{opacity:1;transform:translateY(0) scale(1)}
+}
+.enth-offline-icon{
+    width:64px;
+    height:64px;
+    margin:0 auto 17px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:20px;
+    background:linear-gradient(135deg,#edf4ff,#f1edff);
+    color:#6474e8;
+    font-size:29px;
+    box-shadow:0 8px 24px rgba(100,116,232,.12);
+}
+.enth-offline-title{
+    margin-bottom:9px;
+    color:var(--text,#202124);
+    font-size:21px;
+    font-weight:800;
+    letter-spacing:-.035em;
+}
+.enth-offline-desc{
+    margin:0 auto;
+    max-width:330px;
+    color:var(--sub,#777b85);
+    font-size:13px;
+    line-height:1.7;
+}
+.enth-offline-status{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    margin-top:16px;
+    padding:6px 10px;
+    border-radius:999px;
+    background:#fff1f3;
+    color:#d64a62;
+    font-size:11px;
+    font-weight:800;
+}
+.enth-offline-status::before{
+    content:"";
+    width:6px;
+    height:6px;
+    border-radius:50%;
+    background:#e65c70;
+    box-shadow:0 0 0 4px rgba(230,92,112,.09);
+}
+.enth-offline-actions{
+    display:flex;
+    gap:9px;
+    margin-top:22px;
+}
+.enth-offline-actions button{
+    flex:1;
+    min-height:43px;
+    padding:0 15px;
+    border:1px solid var(--line,#e4e6eb);
+    border-radius:12px;
+    background:var(--card,#fff);
+    color:var(--text,#202124);
+    font-size:13px;
+    font-weight:750;
+    cursor:pointer;
+    transition:transform .18s ease,box-shadow .18s ease,background .18s ease;
+}
+.enth-offline-actions button:hover{
+    transform:translateY(-1px);
+    box-shadow:0 7px 18px rgba(57,64,104,.1);
+}
+.enth-offline-actions .primary{
+    border-color:transparent;
+    background:linear-gradient(135deg,#8ec7ff,#9a8cff);
+    color:#fff;
+    box-shadow:0 7px 20px rgba(117,132,235,.2);
+}
+.enth-offline-actions .primary:hover{
+    box-shadow:0 10px 25px rgba(117,132,235,.28);
+}
+.enth-offline-note{
+    margin-top:13px;
+    color:var(--sub,#777b85);
+    font-size:10px;
+}
+</style>
+<style>
+.enth-wifi-guide-modal{position:fixed;inset:0;z-index:110000;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(12,15,28,.38);backdrop-filter:blur(9px);-webkit-backdrop-filter:blur(9px)}
+.enth-wifi-guide-modal.show{display:flex}
+.enth-wifi-guide-box{position:relative;width:min(470px,calc(100vw - 40px));max-height:calc(100vh - 40px);overflow:auto;padding:28px;border:1px solid rgba(112,94,225,.16);border-radius:24px;background:rgba(255,255,255,.98);box-shadow:0 28px 80px rgba(25,23,60,.28);animation:enthWifiGuideIn .22s cubic-bezier(.2,.8,.2,1)}
+body.dark .enth-wifi-guide-box{background:rgba(27,25,36,.99);border-color:rgba(155,137,255,.18);box-shadow:0 28px 80px rgba(0,0,0,.5)}
+@keyframes enthWifiGuideIn{from{opacity:0;transform:translateY(12px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+.enth-wifi-guide-close{position:absolute;top:14px;right:14px;width:34px;height:34px;border:0;border-radius:10px;background:var(--point-light,#eef2ff);color:var(--sub,#777b85);font-size:21px;cursor:pointer}
+.enth-wifi-guide-icon{width:56px;height:56px;display:flex;align-items:center;justify-content:center;margin-bottom:15px;border-radius:17px;background:linear-gradient(135deg,#eaf5ff,#f1edff);font-size:26px}
+.enth-wifi-guide-title{color:var(--text,#202124);font-size:21px;font-weight:850;letter-spacing:-.04em}
+.enth-wifi-guide-sub{margin-top:5px;color:var(--sub,#777b85);font-size:12px}
+.enth-wifi-guide-steps{display:grid;gap:9px;margin-top:21px}
+.enth-wifi-step{display:flex;gap:11px;padding:13px;border:1px solid var(--line,#e4e6eb);border-radius:14px;background:rgba(248,249,253,.7)}
+.enth-wifi-step>span{width:27px;height:27px;flex:0 0 27px;display:flex;align-items:center;justify-content:center;border-radius:9px;background:linear-gradient(135deg,#8ec7ff,#9a8cff);color:#fff;font-size:12px;font-weight:800}
+.enth-wifi-step strong{display:block;color:var(--text,#202124);font-size:12px}
+.enth-wifi-step p{margin:4px 0 0;color:var(--sub,#777b85);font-size:11px;line-height:1.55}
+.enth-wifi-guide-done{width:100%;height:43px;margin-top:18px;border:0;border-radius:12px;background:linear-gradient(135deg,#8ec7ff,#9a8cff);color:#fff;font-size:13px;font-weight:800;cursor:pointer}
+
+
+/* =========================================================
+   ONLINE / OFFLINE PRESENCE
+========================================================= */
+.presence-badge{
+    display:inline-flex;
+    align-items:center;
+    gap:5px;
+    margin-left:6px;
+    padding:2px 7px;
+    border-radius:999px;
+    font-size:11px;
+    line-height:1.5;
+    font-weight:700;
+    vertical-align:middle;
+    white-space:nowrap;
+    border:1px solid transparent;
+}
+.presence-badge.online{
+    color:#15803d;
+    background:rgba(34,197,94,.09);
+    border-color:rgba(34,197,94,.18);
+}
+.presence-badge.offline{
+    color:var(--sub);
+    background:rgba(148,163,184,.10);
+    border-color:rgba(148,163,184,.18);
+}
+.presence-dot{
+    width:7px;
+    height:7px;
+    border-radius:50%;
+    display:inline-block;
+    flex:none;
+}
+.presence-badge.online .presence-dot{
+    background:#22c55e;
+    box-shadow:0 0 0 3px rgba(34,197,94,.10);
+}
+.presence-badge.offline .presence-dot{
+    background:#94a3b8;
+}
+.presence-line{
+    display:inline-flex;
+    align-items:center;
+    gap:5px;
+    margin-top:4px;
+    font-size:12px;
+    color:var(--sub);
+}
+.presence-line .presence-dot{
+    width:8px;
+    height:8px;
+}
+@media(max-width:700px){
+    .presence-badge{
+        font-size:10px;
+        padding:2px 6px;
+        margin-left:4px;
+    }
+}
+</style>
 </head>
 
 <body>
+<!-- ENTHNET WIFI GUIDE MODAL -->
+<div id="enthWifiGuideModal" class="enth-wifi-guide-modal" role="dialog" aria-modal="true">
+    <div class="enth-wifi-guide-box">
+        <button type="button" class="enth-wifi-guide-close" id="enthWifiGuideClose">×</button>
+        <div class="enth-wifi-guide-icon">📶</div>
+        <div class="enth-wifi-guide-title">Wi‑Fi 연결 가이드</div>
+        <div class="enth-wifi-guide-sub">인터넷 연결을 다시 확인해보세요.</div>
+
+        <div class="enth-wifi-guide-steps">
+            <div class="enth-wifi-step"><span>1</span><div><strong>네트워크 아이콘을 눌러주세요</strong><p>Windows 작업 표시줄 오른쪽 아래의 네트워크 아이콘을 클릭하세요.</p></div></div>
+            <div class="enth-wifi-step"><span>2</span><div><strong>Wi‑Fi를 켜주세요</strong><p>Wi‑Fi가 꺼져 있다면 켠 다음 연결할 네트워크를 선택하세요.</p></div></div>
+            <div class="enth-wifi-step"><span>3</span><div><strong>네트워크에 연결하세요</strong><p>필요하면 Wi‑Fi 비밀번호를 입력하고 연결을 완료하세요.</p></div></div>
+            <div class="enth-wifi-step"><span>4</span><div><strong>엔쓰넷으로 돌아오세요</strong><p>연결이 완료되면 이 창을 닫고 새로고침을 눌러주세요.</p></div></div>
+        </div>
+
+        <button type="button" class="enth-wifi-guide-done" id="enthWifiGuideDone">확인</button>
+    </div>
+</div>
+
+
+<!-- ENTHNET OFFLINE / WIFI ALERT -->
+<div id="enthOfflineOverlay" role="dialog" aria-modal="true"
+     aria-labelledby="enthOfflineTitle" aria-describedby="enthOfflineDesc">
+    <div class="enth-offline-box">
+        <div class="enth-offline-icon">📡</div>
+
+        <div class="enth-offline-title" id="enthOfflineTitle">
+            Wi‑Fi 연결이 끊겨있어요
+        </div>
+
+        <p class="enth-offline-desc" id="enthOfflineDesc">
+            인터넷 연결이 없어 엔쓰넷의 최신 정보를 불러올 수 없습니다.<br>
+            네트워크 연결을 확인한 뒤 다시 시도해주세요.
+        </p>
+
+        <div class="enth-offline-status">
+            현재 오프라인 상태
+        </div>
+
+        <div class="enth-offline-actions">
+            <button type="button" id="enthWifiGuideBtn">
+                📶 Wi‑Fi 연결 가이드
+            </button>
+            <button type="button" class="primary" id="enthOfflineRefreshBtn">
+                ↻ 새로고침
+            </button>
+        </div>
+
+        <div class="enth-offline-note">
+            연결이 복구되면 이 창은 자동으로 사라집니다.
+        </div>
+    </div>
+</div>
+
+
+<!-- ENTHNET CUSTOM CONTEXT MENU -->
+<div id="enthContextMenu" aria-hidden="true">
+    <div class="enth-context-head" id="enthContextTitle">엔쓰넷 메뉴</div>
+
+    <div id="ctxPostActions" style="display:none">
+        <button class="enth-context-item" id="ctxLike" type="button">
+            <span class="enth-context-icon">👍</span><span>좋아요</span>
+        </button>
+        <button class="enth-context-item" id="ctxDislike" type="button">
+            <span class="enth-context-icon">👎</span><span>싫어요</span>
+        </button>
+        <button class="enth-context-item" id="ctxBookmark" type="button">
+            <span class="enth-context-icon">🔖</span><span id="ctxBookmarkText">저장</span>
+        </button>
+        <button class="enth-context-item" id="ctxReport" type="button">
+            <span class="enth-context-icon">🚨</span><span>신고</span>
+        </button>
+
+        <div class="enth-context-sep"></div>
+
+        <div id="ctxOwnerActions" style="display:none">
+            <button class="enth-context-item" id="ctxEdit" type="button">
+                <span class="enth-context-icon">✏️</span><span>수정</span>
+            </button>
+            <button class="enth-context-item danger" id="ctxDelete" type="button">
+                <span class="enth-context-icon">🗑️</span><span>삭제</span>
+            </button>
+            <div class="enth-context-sep"></div>
+        </div>
+    </div>
+
+    <div id="ctxGeneralActions">
+        <button class="enth-context-item" id="ctxBack" type="button">
+            <span class="enth-context-icon">←</span><span>뒤로 가기</span>
+        </button>
+        <button class="enth-context-item" id="ctxRefresh" type="button">
+            <span class="enth-context-icon">↻</span><span>새로고침</span>
+        </button>
+
+        <div class="enth-context-sep"></div>
+
+        <button class="enth-context-item" id="ctxHome" type="button">
+            <span class="enth-context-icon">⌂</span><span>홈으로</span>
+        </button>
+        <button class="enth-context-item" id="ctxTop" type="button">
+            <span class="enth-context-icon">↑</span><span>페이지 맨 위로</span>
+        </button>
+        <button class="enth-context-item" id="ctxCopyUrl" type="button">
+            <span class="enth-context-icon">🔗</span><span>페이지 주소 복사</span>
+        </button>
+    </div>
+
+    <div class="enth-context-sep"></div>
+
+    <button class="enth-context-item" id="ctxTheme" type="button">
+        <span class="enth-context-icon">☾</span><span>테마 전환</span>
+    </button>
+    <button class="enth-context-item" id="ctxClose" type="button">
+        <span class="enth-context-icon">×</span><span>메뉴 닫기</span>
+    </button>
+</div>
 
 <header class="header">
 <div class="header-inner">
@@ -2337,6 +3175,18 @@ footer{
 <!-- LIST -->
 
 <div id="listPage">
+
+
+<div id="announcementBanner" class="notice-banner" aria-live="polite" role="button" tabindex="0" onclick="openAnnouncement()" onkeydown="if(event.key==='Enter'||event.key===' ')openAnnouncement()">
+    <div class="notice-banner-top">
+        <div>
+            <div class="notice-banner-label">📢 엔쓰넷 공지</div>
+            <div class="notice-banner-title" id="announcementBannerTitle"></div>
+        </div>
+        <div class="notice-banner-time" id="announcementBannerTime"></div>
+    </div>
+    <div class="notice-banner-content" id="announcementBannerContent"></div>
+</div>
 
 <div class="page-title">
 <h1 id="pageTitle">엔쓰넷</h1>
@@ -2508,6 +3358,14 @@ footer{
         <button type="button" onclick="spotifyNext()" aria-label="다음 곡">⏭</button>
         <input id="spotifyVolume" type="range" min="0" max="100" value="70" oninput="spotifySetVolume(this.value)" aria-label="볼륨">
     </div>
+    <div class="spotify-search" id="spotifySearchBox">
+        <div class="spotify-search-row">
+            <input id="spotifySearchInput" type="search" placeholder="Spotify에서 노래 검색" autocomplete="off" onkeydown="if(event.key==='Enter'){event.preventDefault();spotifySearchTracks();}">
+            <button type="button" onclick="spotifySearchTracks()">검색</button>
+        </div>
+        <div id="spotifySearchStatus" class="spotify-search-status"></div>
+        <div id="spotifySearchResults" class="spotify-search-results"></div>
+    </div>
 </div>
 
 <div class="follow-stats">
@@ -2675,6 +3533,9 @@ footer{
 
 <div class="profile-bio" id="otherBio" style="display:none"></div>
 
+<div id="otherSpotifyStatus" style="margin-top:10px"></div>
+
+
 <div class="follow-stats">
 
 <button class="follow-stat" onclick="openFollowList('followers',currentProfileUserId)">
@@ -2839,6 +3700,28 @@ footer{
 </div>
 
 <div class="dash-grid" id="dashStats"></div>
+
+
+<div class="mypage-section announcement-admin">
+<div class="mypage-section-title">📢 상단 고정 공지</div>
+<div class="card">
+    <div class="announcement-admin-head">
+        <div>
+            <div class="announcement-admin-title">커뮤니티 상단에 공지 표시</div>
+            <div class="announcement-admin-state" id="announcementAdminState">불러오는 중...</div>
+        </div>
+    </div>
+    <div class="announcement-form">
+        <input id="announcementTitleInput" maxlength="100" placeholder="공지 제목">
+        <textarea id="announcementContentInput" maxlength="2000" placeholder="공지 내용을 입력하세요."></textarea>
+        <div class="announcement-actions">
+            <button type="button" class="announcement-save" onclick="saveSiteAnnouncement()">📌 공지 고정</button>
+            <button type="button" class="announcement-hide" onclick="hideSiteAnnouncement()">공지 숨기기</button>
+            <button type="button" class="announcement-delete" onclick="deleteSiteAnnouncement()">공지 삭제</button>
+        </div>
+    </div>
+</div>
+</div>
 
 <div class="mypage-section">
 <div class="mypage-section-title">👥 회원 관리</div>
@@ -3235,7 +4118,7 @@ async function loadEverythingFromDB(){
             db.from("comments").select("*").order("created_at",{ascending:true}),
             db.from("reactions").select("target_type,target_id,kind"),
             db.from("roles").select("user_id,role"),
-            db.from("profiles").select("user_id,nickname")
+            db.from("profiles").select("user_id,nickname,last_seen")
         ]);
 
         if(pRes.error||cRes.error||rRes.error){
@@ -3251,7 +4134,8 @@ async function loadEverythingFromDB(){
                 .filter(r=>r&&r.user_id)
                 .map(r=>({
                     id:r.user_id,
-                    nickname:(r.nickname||"").trim()||"회원"
+                    nickname:(r.nickname||"").trim()||"회원",
+                    last_seen:r.last_seen||null
                 }));
         }
 
@@ -3466,9 +4350,116 @@ let rolesMap={};
 /* 가입한 전체 회원 목록(profiles 테이블): [{id, nickname}] */
 let profilesMembers=[];
 
+/* 온라인 상태: 최근 2분 이내 heartbeat가 있으면 온라인으로 표시 */
+const PRESENCE_ONLINE_MS=2*60*1000;
+let presenceLastPingAt=0;
+let presenceStarted=false;
+let presenceHeartbeatTimer=null;
+let presenceRefreshTimer=null;
+let presenceVisibilityBound=false;
+let presenceOnlineBound=false;
+
+function canonicalUserId(id){
+    if(id===null||id===undefined)return "";
+    return String(id).replace(/^auth_/i,"");
+}
+
+function sameUserId(a,b){
+    return canonicalUserId(a)!=="" &&
+           canonicalUserId(a)===canonicalUserId(b);
+}
+
+function profileRecordOf(id){
+    if(!id)return null;
+    const key=canonicalUserId(id);
+    return profilesMembers.find(p=>canonicalUserId(p.id)===key)||null;
+}
+
+function isUserOnline(id){
+    if(!id)return false;
+    if(String(id)===String(userId)){
+        return !!authUser && navigator.onLine && (Date.now()-presenceLastPingAt<PRESENCE_ONLINE_MS);
+    }
+    const profile=profileRecordOf(id);
+    if(!profile||!profile.last_seen)return false;
+    const t=new Date(profile.last_seen).getTime();
+    return Number.isFinite(t) && (Date.now()-t<PRESENCE_ONLINE_MS);
+}
+
+function presenceBadgeHTML(id){
+    const online=isUserOnline(id);
+    return `<span class="presence-badge ${online?"online":"offline"}" data-presence-user="${escapeHTML(String(id))}">`+
+        `<span class="presence-dot"></span>${online?"온라인":"오프라인"}</span>`;
+}
+
+function updatePresenceBadges(){
+    document.querySelectorAll("[data-presence-user]").forEach(el=>{
+        const id=el.getAttribute("data-presence-user");
+        const online=isUserOnline(id);
+        el.className=`presence-badge ${online?"online":"offline"}`;
+        el.innerHTML=`<span class="presence-dot"></span>${online?"온라인":"오프라인"}`;
+    });
+}
+
+async function sendPresenceHeartbeat(){
+    if(!authUser||!navigator.onLine)return;
+    presenceLastPingAt=Date.now();
+    try{
+        const{error}=await db.from("profiles").upsert({
+            user_id:userId,
+            nickname:(localStorage.getItem("Nthnet_nickname")||"회원").trim()||"회원",
+            last_seen:new Date().toISOString()
+        },{onConflict:"user_id"});
+        if(error)throw error;
+    }catch(e){
+        console.warn("[Presence] heartbeat failed",e);
+    }
+}
+
+async function refreshPresenceProfiles(){
+    try{
+        const{data,error}=await db.from("profiles").select("user_id,nickname,last_seen");
+        if(error)throw error;
+        if(Array.isArray(data)){
+            profilesMembers=data
+                .filter(r=>r&&r.user_id)
+                .map(r=>({
+                    id:r.user_id,
+                    nickname:(r.nickname||"").trim()||"회원",
+                    last_seen:r.last_seen||null
+                }));
+            updatePresenceBadges();
+        }
+    }catch(e){
+        console.warn("[Presence] refresh failed",e);
+    }
+}
+
+function startPresence(){
+    if(!authUser||presenceStarted)return;
+    presenceStarted=true;
+    sendPresenceHeartbeat();
+    presenceHeartbeatTimer=setInterval(()=>sendPresenceHeartbeat(),45000);
+    presenceRefreshTimer=setInterval(()=>refreshPresenceProfiles(),30000);
+    if(!presenceVisibilityBound){
+        document.addEventListener("visibilitychange",()=>{
+            if(document.visibilityState==="visible")sendPresenceHeartbeat();
+        });
+        presenceVisibilityBound=true;
+    }
+    if(!presenceOnlineBound){
+        window.addEventListener("online",()=>{
+            sendPresenceHeartbeat();
+            refreshPresenceProfiles();
+        });
+        presenceOnlineBound=true;
+    }
+    setTimeout(()=>refreshPresenceProfiles(),3000);
+}
+
 /* user_id -> 닉네임 (profiles 기반) */
 function nicknameOfProfile(id){
-    const hit=profilesMembers.find(p=>p.id===id);
+    const hit=profileRecordOf(id);
     return hit?hit.nickname:null;
 }
 
@@ -3587,6 +4578,17 @@ function applyAuthUser(u){
     refreshAuthUI();
 
     checkAdmin();
+
+    /* 로그인/로그아웃 후 DB 팔로우 관계를 다시 동기화 */
+    loadFollowsFromDB().then(()=>{
+        if(typeof renderMyPage==="function")renderMyPage();
+        if(currentProfileUserId&&typeof renderOtherProfile==="function")renderOtherProfile();
+    });
+
+    if(authUser){
+        presenceLastPingAt=Date.now();
+        setTimeout(startPresence,0);
+    }
 
 }
 
@@ -4007,6 +5009,33 @@ function saveFollows(){
 
 }
 
+/* 팔로우 관계를 Supabase에서 불러옵니다.
+   DB가 정상적으로 연결되면 DB를 source of truth로 사용합니다. */
+async function loadFollowsFromDB(){
+    try{
+        const{data,error}=await db
+            .from("follows")
+            .select("follower_id,following_id,created_at")
+            .order("created_at",{ascending:true});
+
+        if(error)throw error;
+
+        follows=(data||[])
+            .filter(r=>r&&r.follower_id&&r.following_id)
+            .map(r=>({
+                followerId:String(r.follower_id),
+                followingId:String(r.following_id),
+                date:r.created_at||null
+            }));
+
+        saveFollows();
+        return true;
+    }catch(e){
+        console.warn("[Follow] DB load failed",e);
+        return false;
+    }
+}
+
 function saveBookmarks(){
 
     localStorage.setItem(
@@ -4326,137 +5355,78 @@ function isNew(post){
 
 function nicknameOfUser(id){
 
-    if(id===userId){
+    if(sameUserId(id,userId)){
 
-        return localStorage.getItem(
-            "Nthnet_nickname"
-        )||"익명";
+        return localStorage.getItem("Nthnet_nickname")||"익명";
 
     }
 
-    const post=
-        posts.find(
-            p=>p.authorId===id
-        );
-
-    if(post)return post.nickname;
+    const post=posts.find(p=>sameUserId(p.authorId,id));
+    if(post&&post.nickname)return post.nickname;
 
     for(const p of posts){
+        const comment=(p.comments||[]).find(c=>sameUserId(c.authorId,id));
+        if(comment&&comment.nickname)return comment.nickname;
 
-        const comment=
-            p.comments.find(
-                c=>c.authorId===id
-            );
-
-        if(comment)return comment.nickname;
-
+        for(const c of (p.comments||[])){
+            const reply=(c.replies||[]).find(r=>sameUserId(r.authorId,id));
+            if(reply&&reply.nickname)return reply.nickname;
+        }
     }
 
-    /* 글·댓글이 없는 회원은 profiles 명부에서 닉네임을 찾는다 */
     const prof=nicknameOfProfile(id);
     if(prof)return prof;
 
-    /* 그래도 없으면 역할 기반 기본 이름(AI 등) */
     const role=roleOfUser(id);
     if(role==="ai")return "AI";
 
     return "회원";
-
 }
 
 
 function avatarOfUser(id){
 
-    if(id===userId){
-
-        return localStorage.getItem(
-            "Nthnet_avatar"
-        )||"";
-
+    if(sameUserId(id,userId)){
+        return localStorage.getItem("Nthnet_avatar")||"";
     }
 
-    const post=
-        posts.find(
-            p=>p.authorId===id
-        );
-
+    const post=posts.find(p=>sameUserId(p.authorId,id));
     if(post&&post.avatar)return post.avatar;
 
     for(const p of posts){
+        const comment=(p.comments||[]).find(c=>sameUserId(c.authorId,id));
+        if(comment&&comment.avatar)return comment.avatar;
 
-        const comment=
-            p.comments.find(
-                c=>c.authorId===id
-            );
-
-        if(comment&&comment.avatar)
-            return comment.avatar;
-
-
-        for(const c of p.comments){
-
-            const reply=
-                (c.replies||[]).find(
-                    r=>r.authorId===id
-                );
-
-            if(reply&&reply.avatar)
-                return reply.avatar;
-
+        for(const c of (p.comments||[])){
+            const reply=(c.replies||[]).find(r=>sameUserId(r.authorId,id));
+            if(reply&&reply.avatar)return reply.avatar;
         }
-
     }
 
     return "";
-
 }
 
 
 function avatarImgOfUser(id){
 
-    if(id===userId){
-
-        return localStorage.getItem(
-            "Nthnet_avatar_img"
-        )||"";
-
+    if(sameUserId(id,userId)){
+        return localStorage.getItem("Nthnet_avatar_img")||"";
     }
 
-    const post=
-        posts.find(
-            p=>p.authorId===id
-        );
-
-    if(post&&post.avatarImg)
-        return post.avatarImg;
+    const post=posts.find(p=>sameUserId(p.authorId,id));
+    if(post&&post.avatarImg)return post.avatarImg;
 
     for(const p of posts){
+        const comment=(p.comments||[]).find(c=>sameUserId(c.authorId,id));
+        if(comment&&comment.avatarImg)return comment.avatarImg;
 
-        const comment=
-            p.comments.find(
-                c=>c.authorId===id
-            );
-
-        if(comment&&comment.avatarImg)
-            return comment.avatarImg;
-
-
-        for(const c of p.comments){
-
-            const reply=
-                (c.replies||[]).find(
-                    r=>r.authorId===id
-                );
-
-            if(reply&&reply.avatarImg)
-                return reply.avatarImg;
-
+        for(const c of (p.comments||[])){
+            const reply=(c.replies||[]).find(r=>sameUserId(r.authorId,id));
+            if(reply&&reply.avatarImg)return reply.avatarImg;
         }
-
     }
 
     return "";
-
 }
 
 
@@ -4586,8 +5556,8 @@ function isFollowing(targetId){
 
     return follows.some(
         f=>
-            f.followerId===userId&&
-            f.followingId===targetId
+            String(f.followerId)===String(userId)&&
+            String(f.followingId)===String(targetId)
     );
 
 }
@@ -4596,7 +5566,7 @@ function isFollowing(targetId){
 function followerCount(targetId){
 
     return follows.filter(
-        f=>f.followingId===targetId
+        f=>String(f.followingId)===String(targetId)
     ).length;
 
 }
@@ -4605,65 +5575,98 @@ function followerCount(targetId){
 function followingCount(targetId){
 
     return follows.filter(
-        f=>f.followerId===targetId
+        f=>String(f.followerId)===String(targetId)
     ).length;
 
 }
 
 
-function toggleFollow(targetId){
+async function toggleFollow(targetId){
 
-    if(
-        !targetId||
-        targetId===userId
-    )return;
+    if(!requireLogin())return;
 
+    targetId=String(targetId||"");
+    const me=String(userId||"");
+
+    if(!targetId||!me||targetId===me)return;
 
     const index=
         follows.findIndex(
             f=>
-                f.followerId===userId&&
-                f.followingId===targetId
+                String(f.followerId)===me&&
+                String(f.followingId)===targetId
         );
 
+    const wasFollowing=index>=0;
 
-    if(index>=0){
-
+    /* 화면을 먼저 반영하고 DB 실패 시 되돌립니다. */
+    if(wasFollowing){
         follows.splice(index,1);
-
     }else{
-
         follows.push({
-
-            followerId:userId,
-
+            followerId:me,
             followingId:targetId,
-
             date:new Date().toISOString()
-
         });
-
-        addNotification(
-
-            targetId,
-
-            "follow",
-
-            null,
-
-            `${nicknameOfUser(userId)}님이 회원님을 팔로우했습니다.`
-
-        );
-
     }
-
-
     saveFollows();
-
     renderMyPage();
+    if(currentProfileUserId)renderOtherProfile();
 
-    if(currentProfileUserId)
-        renderOtherProfile();
+    try{
+        if(wasFollowing){
+            const{error}=await db
+                .from("follows")
+                .delete()
+                .eq("follower_id",me)
+                .eq("following_id",targetId);
+            if(error)throw error;
+        }else{
+            const{error}=await db
+                .from("follows")
+                .insert({
+                    follower_id:me,
+                    following_id:targetId
+                });
+            if(error)throw error;
+
+            /* 기존 알림 UI는 유지합니다. 알림 테이블이 없으면 무시됩니다. */
+            if(typeof addNotification==="function"){
+                addNotification(
+                    targetId,
+                    "follow",
+                    null,
+                    `${nicknameOfUser(userId)}님이 회원님을 팔로우했습니다.`
+                );
+            }
+        }
+
+        await loadFollowsFromDB();
+        renderMyPage();
+        if(currentProfileUserId)renderOtherProfile();
+    }catch(e){
+        console.error("[Follow] DB save failed",e);
+
+        /* 실패 시 로컬 상태 원복 */
+        if(wasFollowing){
+            follows.push({
+                followerId:me,
+                followingId:targetId,
+                date:new Date().toISOString()
+            });
+        }else{
+            const rollbackIndex=follows.findIndex(f=>
+                String(f.followerId)===me&&
+                String(f.followingId)===targetId
+            );
+            if(rollbackIndex>=0)follows.splice(rollbackIndex,1);
+        }
+
+        saveFollows();
+        renderMyPage();
+        if(currentProfileUserId)renderOtherProfile();
+        uiAlert("팔로우 처리에 실패했습니다: "+(e.message||e));
+    }
 
 }
 
@@ -4727,7 +5730,7 @@ function openFollowList(type,targetId){
         ids=
             follows
             .filter(
-                f=>f.followingId===targetId
+                f=>String(f.followingId)===String(targetId)
             )
             .map(
                 f=>f.followerId
@@ -4738,7 +5741,7 @@ function openFollowList(type,targetId){
         ids=
             follows
             .filter(
-                f=>f.followerId===targetId
+                f=>String(f.followerId)===String(targetId)
             )
             .map(
                 f=>f.followingId
@@ -4749,81 +5752,58 @@ function openFollowList(type,targetId){
 
     renderUserList(ids);
 
+    /* 목록을 열 때 DB 최신 상태를 다시 확인 */
+    loadFollowsFromDB().then(()=>{
+        let freshIds=[];
+        if(type==="followers"){
+            freshIds=follows.filter(
+                f=>String(f.followingId)===String(targetId)
+            ).map(f=>f.followerId);
+        }else{
+            freshIds=follows.filter(
+                f=>String(f.followerId)===String(targetId)
+            ).map(f=>f.followingId);
+        }
+        renderUserList(freshIds);
+    });
+
 }
 
 
 function renderUserList(ids){
 
-    const box=
-        document.getElementById(
-            "followUsers"
-        );
-
+    const box=document.getElementById("followUsers");
+    if(!box)return;
 
     if(!ids.length){
-
-        box.innerHTML=
-        `<div class="empty">
-            아직 팔로우 관계가 없습니다.
-        </div>`;
-
+        box.innerHTML=`<div class="empty">아직 팔로우 관계가 없습니다.</div>`;
         return;
-
     }
 
+    box.innerHTML=ids.map(id=>{
+        const name=nicknameOfUser(id);
+        const avatarImg=avatarImgOfUser(id);
+        const avatar=avatarOfUser(id);
+        const following=isFollowing(id);
+        const safeId=String(id).replace(/\\/g,"\\\\").replace(/'/g,"\\'");
+        const avatarHTML=avatarImg
+            ?`<img src="${escapeHTML(avatarImg)}" alt="아바타">`
+            :escapeHTML(avatar||name.charAt(0)||"?");
 
-    box.innerHTML=
-        ids.map(id=>{
-
-            const name=
-                nicknameOfUser(id);
-
-            const following=
-                isFollowing(id);
-
-
-            return`
-
-                <div class="user-row">
-
-                    <div class="user-avatar">
-                        ${escapeHTML(name.charAt(0))}
+        return `
+            <div class="user-row" onclick="openUserProfile('${safeId}')" style="cursor:pointer">
+                <div class="user-avatar">${avatarHTML}</div>
+                <div class="user-info">
+                    <div class="user-name">
+                        ${escapeHTML(name)} ${roleBadgeHTML(id)} ${presenceBadgeHTML(id)}
                     </div>
-
-                    <div class="user-info">
-
-                        <div
-                            class="user-name"
-                            onclick="openUserProfile('${id}')"
-                        >
-                            ${escapeHTML(name)}
-                        </div>
-
-                        <div class="user-id">
-                            ${escapeHTML(id)}
-                        </div>
-
-                    </div>
-
-                    ${
-                        id!==userId
-                        ?`
-                        <button
-                            class="user-follow ${following?"on":""}"
-                            onclick="toggleFollow('${id}')"
-                        >
-                            ${following?"팔로잉":"팔로우"}
-                        </button>
-                        `
-                        :""
-                    }
-
+                    <div class="user-id">회원 ID: ${escapeHTML(String(id))}</div>
                 </div>
-
-            `;
-
-        }).join("");
-
+                ${id!==userId&&!sameUserId(id,userId)
+                    ?`<button class="user-follow ${following?"on":""}" onclick="event.stopPropagation(); toggleFollow('${safeId}')">${following?"팔로잉":"팔로우"}</button>`
+                    :""}
+            </div>`;
+    }).join("");
 }
 
 
@@ -5040,6 +6020,7 @@ function renderPosts(){
                         }"
                     >
                         ${escapeHTML(post.nickname)}
+                        ${post.authorId?presenceBadgeHTML(post.authorId):""}
                     </span>
 
                     <span>
@@ -5295,6 +6276,7 @@ function renderRecent(){
 
                 <div class="popular-info">
                     ${escapeHTML(post.nickname)}
+                    ${post.authorId?presenceBadgeHTML(post.authorId):""}
                     · 👁 ${post.views}
                 </div>
 
@@ -5617,6 +6599,9 @@ function openPost(id){
         "detailPage"
     ).classList.add("show");
 
+    document.querySelector("#detailPage .detail-actions").style.display="";
+    document.querySelector("#detailPage .comments").style.display="";
+
 
     document.getElementById(
         "detailCategory"
@@ -5642,6 +6627,7 @@ function openPost(id){
             }"
         >${escapeHTML(post.nickname)}</span>
         ${post.authorId?roleBadgeHTML(post.authorId):""}
+        ${post.authorId?presenceBadgeHTML(post.authorId):""}
         · ${formatDate(post.date)}
         · 조회 ${post.views}`;
 
@@ -5736,6 +6722,7 @@ function renderComments(){
                         ${escapeHTML(comment.nickname)}
                     </span>
                     ${comment.authorId?roleBadgeHTML(comment.authorId):""}
+                    ${comment.authorId?presenceBadgeHTML(comment.authorId):""}
 
                     <span class="comment-date">
                         ${formatDate(comment.date)}
@@ -5802,6 +6789,7 @@ function renderComments(){
                                         ↳ ${escapeHTML(reply.nickname)}
                                     </span>
                                     ${reply.authorId?roleBadgeHTML(reply.authorId):""}
+                                    ${reply.authorId?presenceBadgeHTML(reply.authorId):""}
 
                                     <span class="comment-date">
                                         ${formatDate(reply.date)}
@@ -6578,6 +7566,139 @@ function submitReport(){
 let adminReports=[];
 let adminFilter="pending";
 
+
+/* =========================================================
+   SITE ANNOUNCEMENT
+   - public.site_announcement 싱글톤 테이블 사용
+========================================================= */
+async function loadSiteAnnouncement(){
+    const banner=document.getElementById("announcementBanner");
+    if(!banner)return;
+    try{
+        const{data,error}=await db.from("site_announcement").select("*").eq("id",1).maybeSingle();
+        if(error)throw error;
+        if(!data||!data.is_active){
+            banner.classList.remove("show");
+            return data||null;
+        }
+        const title=document.getElementById("announcementBannerTitle");
+        const content=document.getElementById("announcementBannerContent");
+        const time=document.getElementById("announcementBannerTime");
+        if(title)title.textContent=data.title||"엔쓰넷 공지";
+        if(content)content.textContent=data.content||"";
+        if(time)time.textContent=data.updated_at?formatDate(data.updated_at):"";
+        banner.classList.add("show");
+        return data;
+    }catch(e){
+        console.warn("[Announcement] load failed",e);
+        banner.classList.remove("show");
+        return null;
+    }
+}
+
+async function openAnnouncement(){
+    try{
+        const{data,error}=await db.from("site_announcement")
+            .select("*")
+            .eq("id",1)
+            .maybeSingle();
+
+        if(error)throw error;
+        if(!data||!data.is_active)return;
+
+        document.getElementById("listPage").style.display="none";
+        document.getElementById("myPage").classList.remove("show");
+        document.getElementById("otherProfile").classList.remove("show");
+        document.getElementById("followListPage").classList.remove("show");
+        document.getElementById("notificationPage").classList.remove("show");
+        document.getElementById("adminPage").classList.remove("show");
+        document.getElementById("detailPage").classList.add("show");
+
+        /* 공지는 일반 게시글 상세 화면을 사용하되, 게시글 전용 기능은 숨김 */
+        currentPostId=null;
+        document.getElementById("detailCategory").textContent="공지";
+        document.getElementById("detailTitle").textContent=data.title||"엔쓰넷 공지";
+        document.getElementById("detailInfo").textContent=
+            `엔쓰넷 관리자 · ${formatDate(data.updated_at)}`;
+        document.getElementById("detailContent").textContent=data.content||"";
+        document.getElementById("detailImages").innerHTML="";
+        document.querySelector("#detailPage .detail-actions").style.display="none";
+        document.querySelector("#detailPage .comments").style.display="none";
+
+        window.scrollTo({top:0,behavior:"smooth"});
+    }catch(e){
+        console.warn("[Announcement] open failed",e);
+        uiAlert("공지를 불러오지 못했습니다: "+(e.message||e));
+    }
+}
+
+async function loadAdminAnnouncementForm(){
+    const state=document.getElementById("announcementAdminState");
+    try{
+        const{data,error}=await db.from("site_announcement").select("*").eq("id",1).maybeSingle();
+        if(error)throw error;
+        const title=document.getElementById("announcementTitleInput");
+        const content=document.getElementById("announcementContentInput");
+        if(title)title.value=data?.title||"";
+        if(content)content.value=data?.content||"";
+        if(state)state.textContent=data?(data.is_active?"현재 공지 고정 중":"공지 숨김 상태"):"등록된 공지가 없습니다.";
+    }catch(e){
+        console.warn("[Announcement] admin load failed",e);
+        if(state)state.textContent="공지 테이블을 불러오지 못했습니다.";
+    }
+}
+
+async function saveSiteAnnouncement(){
+    if(!requireLogin()||!isAdmin)return;
+    const title=document.getElementById("announcementTitleInput")?.value.trim()||"";
+    const content=document.getElementById("announcementContentInput")?.value.trim()||"";
+    if(!title||!content){uiAlert("공지 제목과 내용을 모두 입력해주세요.");return;}
+    try{
+        const{error}=await db.from("site_announcement").upsert({
+            id:1,
+            title:title,
+            content:content,
+            is_active:true,
+            updated_by:authUser.id,
+            updated_at:new Date().toISOString()
+        });
+        if(error)throw error;
+        await loadSiteAnnouncement();
+        await loadAdminAnnouncementForm();
+        uiSuccess("상단 공지가 고정되었습니다.");
+    }catch(e){
+        console.error("[Announcement] save failed",e);
+        uiAlert("공지 저장 실패: "+(e.message||e)+"\n\nSupabase에 site_announcement 테이블과 정책이 생성되어 있는지 확인해주세요.");
+    }
+}
+
+async function hideSiteAnnouncement(){
+    if(!requireLogin()||!isAdmin)return;
+    try{
+        const{error}=await db.from("site_announcement").upsert({id:1,is_active:false,updated_by:authUser.id,updated_at:new Date().toISOString()});
+        if(error)throw error;
+        await loadSiteAnnouncement();
+        await loadAdminAnnouncementForm();
+        uiSuccess("상단 공지를 숨겼습니다.");
+    }catch(e){
+        uiAlert("공지 숨김 실패: "+(e.message||e));
+    }
+}
+
+async function deleteSiteAnnouncement(){
+    if(!requireLogin()||!isAdmin)return;
+    if(!(await uiConfirm("상단 공지를 완전히 삭제할까요?")))return;
+    try{
+        const{error}=await db.from("site_announcement").delete().eq("id",1);
+        if(error)throw error;
+        await loadSiteAnnouncement();
+        await loadAdminAnnouncementForm();
+        uiSuccess("상단 공지를 삭제했습니다.");
+    }catch(e){
+        uiAlert("공지 삭제 실패: "+(e.message||e));
+    }
+}
+
 function openAdminPage(){
 
     if(!requireLogin())return;
@@ -6626,6 +7747,9 @@ function openDashboard(){
     document.getElementById("dashboardPage").classList.add("show");
 
     renderDashboard();
+    const announcementAdmin=document.querySelector(".announcement-admin");
+    if(announcementAdmin)announcementAdmin.style.display=isAdmin?"":"none";
+    if(isAdmin)loadAdminAnnouncementForm();
 
     /* 신고 현황도 불러오기(가능한 경우) */
     loadDashboardReports();
@@ -6759,6 +7883,7 @@ function renderDashboard(){
                              onclick="openUserProfile('${idEsc}')">
                             ${escapeHTML(m.nickname)}
                             ${roleBadgeHTML(m.id)}
+                            ${presenceBadgeHTML(m.id)}
                         </div>
                         <div class="dash-member-meta">
                             게시글 ${m.posts}개 · 댓글 ${m.comments}개
@@ -7457,6 +8582,7 @@ function renderUserResults(){
                     <div class="user-result-name">
                         ${highlight(u.nickname)}
                         ${roleBadgeHTML(u.id)}
+                        ${presenceBadgeHTML(u.id)}
                     </div>
                     <div class="user-result-meta">
                         게시글 ${postCount}개
@@ -7571,7 +8697,8 @@ function renderOtherProfile(){
         "otherName"
     ).innerHTML=
         escapeHTML(name)+
-        " "+roleBadgeHTML(id);
+        " "+roleBadgeHTML(id)+
+        presenceBadgeHTML(id);
 
 
     document.getElementById(
@@ -7776,8 +8903,31 @@ function renderOtherProfile(){
 
     }
 
+    loadOtherPublicActivity(id);
 }
 
+
+async function loadOtherPublicActivity(id){
+    const spotifyBox=document.getElementById("otherSpotifyStatus");
+    if(spotifyBox) spotifyBox.innerHTML='<div style="padding:14px;border:1px solid var(--line,#ddd);border-radius:14px;color:var(--sub,#888);font-size:13px">🎵 듣는 곡 불러오는 중…</div>';
+    try{
+        const {data:song,error}=await db.from("user_now_playing")
+            .select("track_name,artist_name,album_name,cover_url,spotify_url,is_playing,updated_at")
+            .eq("user_id",id).maybeSingle();
+        if(error) throw error;
+        const fresh=song && song.is_playing!==false && (Date.now()-new Date(song.updated_at).getTime()<120000);
+        if(spotifyBox){
+            if(!song || !fresh){
+                spotifyBox.innerHTML='<div style="padding:14px;border:1px solid var(--line,#ddd);border-radius:14px;color:var(--sub,#888);font-size:13px">🎵 현재 듣고 있는 곡이 없습니다.</div>';
+            }else{
+                spotifyBox.innerHTML=`<div class="other-spotify-card"><div class="other-spotify-head"><span>🎵 지금 듣는 곡</span><span class="other-spotify-live">● LIVE</span></div><div class="other-spotify-main"><div class="spotify-cd-wrap"><img class="spotify-cd" src="${escapeHTML(song.cover_url||"")}" alt="앨범 커버"><span class="spotify-cd-hole"></span></div><div class="other-spotify-info"><div class="other-spotify-track">${escapeHTML(song.track_name||"알 수 없는 곡")}</div><div class="other-spotify-artist">${escapeHTML(song.artist_name||"알 수 없는 아티스트")}</div>${song.album_name?`<div class="other-spotify-album">${escapeHTML(song.album_name)}</div>`:""}${song.spotify_url?`<a href="${escapeHTML(song.spotify_url)}" target="_blank" rel="noopener" class="other-spotify-link">Spotify에서 열기 ↗</a>`:""}</div></div></div>`;
+            }
+        }
+    }catch(e){
+        console.error("[Profile] public Spotify activity",e);
+        if(spotifyBox) spotifyBox.innerHTML='<div style="padding:14px;border:1px solid var(--line,#ddd);border-radius:14px;color:var(--sub,#888);font-size:13px">🎵 현재 재생 정보를 불러오지 못했습니다.</div>';
+    }
+}
 
 /* 회원 역할 변경(관리자/운영자만 가능) */
 async function setUserRole(id,role){
@@ -7896,7 +9046,8 @@ function renderMyPage(){
         "profileName"
     ).innerHTML=
         escapeHTML(nickname)+
-        " "+roleBadgeHTML(userId);
+        " "+roleBadgeHTML(userId)+
+        presenceBadgeHTML(userId);
 
 
     const avatar=
@@ -9332,6 +10483,7 @@ initAuth();
 /* 먼저 화면을 그리고(캐시된 localStorage 게시글),
    이어서 Supabase에서 최신 게시글을 불러와 갱신한다. */
 renderPosts();
+loadSiteAnnouncement();
 
 (async function initDB(){
 
@@ -9347,7 +10499,9 @@ renderPosts();
     posts=normalizePosts(fresh);
     localStorage.setItem("Nthnet_posts",JSON.stringify(posts));
 
+    await loadFollowsFromDB();
     renderPosts();
+    loadSiteAnnouncement();
 
     if(typeof renderMyPage==="function")renderMyPage();
 
@@ -9393,7 +10547,7 @@ function downloadPrivacyDoc(ext){
    ============================== */
 const SPOTIFY_CLIENT_ID = "7e60b85f6c3247c398baaef7eba171cf";
 const SPOTIFY_REDIRECT_URI = "https://jijisung0909.github.io/NASD/";
-const SPOTIFY_SCOPES = "streaming user-read-currently-playing user-read-playback-state user-modify-playback-state";
+const SPOTIFY_SCOPES = "streaming user-read-email user-read-private user-read-currently-playing user-read-playback-state user-modify-playback-state";
 const SPOTIFY_STORAGE = {
     token:"Nthnet_spotify_token",
     expires:"Nthnet_spotify_expires",
@@ -9596,6 +10750,14 @@ function spotifyUpdatePlayButton(isPlaying){
     if(b)b.textContent=isPlaying?"⏸":"▶";
 }
 
+async function publishSpotifyNowPlaying(song){
+    if(typeof authUser === "undefined" || !authUser)return;
+    try{
+        if(!song){ await db.from("user_now_playing").delete().eq("user_id",authUser.id); return; }
+        await db.from("user_now_playing").upsert({user_id:authUser.id,track_name:song.track_name||"",artist_name:song.artist_name||"",album_name:song.album_name||"",cover_url:song.cover_url||"",spotify_url:song.spotify_url||"",is_playing:!!song.is_playing,updated_at:new Date().toISOString()},{onConflict:"user_id"});
+    }catch(e){console.error("[Spotify] publish profile",e);}
+}
+
 async function spotifyFetchNowPlaying(){
     if(!await spotifyGetToken()){spotifyRenderEmpty();return;}
     try{
@@ -9606,21 +10768,90 @@ async function spotifyFetchNowPlaying(){
         if(!data||!data.item){
             body.innerHTML='<div class="spotify-empty">현재 재생 중인 곡이 없습니다.</div>';
             status.textContent=spotifyDeviceId?"Spotify 연결됨 · 재생 중인 곡 없음":"Spotify 인증됨 · 웹 플레이어 연결 중";
-            spotifyUpdatePlayButton(false);return;
+            spotifyUpdatePlayButton(false);
+            await publishSpotifyNowPlaying(null);
+            return;
         }
         const item=data.item;
         const cover=item.album?.images?.[0]?.url||"";
         const artists=(item.artists||[]).map(a=>a.name).join(", ");
         const url=item.external_urls?.spotify||"https://open.spotify.com";
-        body.innerHTML=`<img class="spotify-np-cover" src="${escapeHTML(cover)}" alt="앨범 커버">
+        await publishSpotifyNowPlaying({track_name:item.name,artist_name:artists,album_name:item.album?.name||"",cover_url:cover,spotify_url:url,is_playing:!!data.is_playing});
+        body.innerHTML=`<div class="spotify-cd-wrap ${data.is_playing?"":"paused"}"><img class="spotify-cd" src="${escapeHTML(cover)}" alt="앨범 커버"><span class="spotify-cd-hole"></span></div>
             <div class="spotify-np-info">
                 <div class="spotify-np-track">${escapeHTML(item.name||"알 수 없는 곡")}</div>
                 <div class="spotify-np-artist">${escapeHTML(artists||"알 수 없는 아티스트")}</div>
+                <div class="spotify-np-album">${escapeHTML(item.album?.name||"")}</div>
                 <a class="spotify-np-link" href="${escapeHTML(url)}" target="_blank" rel="noopener">Spotify에서 열기 ↗</a>
             </div>`;
         status.textContent=data.is_playing?"Spotify 연결됨 · 지금 재생 중":"Spotify 연결됨 · 일시정지";
         spotifyUpdatePlayButton(!!data.is_playing);
     }catch(e){console.error("[Spotify] now playing",e);}
+}
+
+function spotifyRenderSearchResults(items){
+    const box=document.getElementById("spotifySearchResults");
+    if(!box)return;
+    if(!items||!items.length){box.innerHTML='<div class="spotify-empty">검색 결과가 없습니다.</div>';return;}
+    box.innerHTML=items.map((item,i)=>{
+        const cover=item.album?.images?.[2]?.url||item.album?.images?.[0]?.url||"";
+        const artists=(item.artists||[]).map(a=>a.name).join(", ");
+        return `<button type="button" class="spotify-search-item" onclick="spotifyPlaySearchResult(${i})">
+            ${cover?`<img class="spotify-search-cover" src="${escapeHTML(cover)}" alt="">`:''}
+            <span class="spotify-search-info">
+                <span class="spotify-search-track">${escapeHTML(item.name||"알 수 없는 곡")}</span>
+                <span class="spotify-search-artist">${escapeHTML(artists||"알 수 없는 아티스트")} · ${escapeHTML(item.album?.name||"")}</span>
+            </span>
+            <span class="spotify-search-play">▶</span>
+        </button>`;
+    }).join("");
+    window.__nthnetSpotifySearchItems=items;
+}
+
+async function spotifySearchTracks(){
+    const input=document.getElementById("spotifySearchInput");
+    const status=document.getElementById("spotifySearchStatus");
+    const box=document.getElementById("spotifySearchResults");
+    const q=(input?.value||"").trim();
+    if(!q){if(status)status.textContent="검색어를 입력해주세요.";if(box)box.innerHTML="";return;}
+    if(status)status.textContent="검색 중…";
+    try{
+        const data=await spotifyApi("/search?"+new URLSearchParams({q,type:"track",limit:"10",market:"KR"}).toString());
+        const items=data?.tracks?.items||[];
+        spotifyRenderSearchResults(items);
+        if(status)status.textContent=items.length?`${items.length}개의 곡을 찾았습니다.`:"검색 결과가 없습니다.";
+    }catch(e){
+        console.error("[Spotify] search",e);
+        if(status)status.textContent="검색 실패: "+(e.message||e);
+    }
+}
+
+async function spotifyPlaySearchResult(index){
+    const items=window.__nthnetSpotifySearchItems||[];
+    const item=items[index];
+    if(!item?.uri)return;
+    if(!spotifyDeviceId){uiAlert("웹 플레이어가 아직 준비되지 않았습니다. Spotify 연결을 먼저 완료해주세요.");return;}
+    try{
+        const token=await spotifyGetToken();
+        if(!token)throw new Error("Spotify 로그인이 필요합니다.");
+        const res=await fetch("https://api.spotify.com/v1/me/player/play?device_id="+encodeURIComponent(spotifyDeviceId),{
+            method:"PUT",
+            headers:{Authorization:"Bearer "+token,"Content-Type":"application/json"},
+            body:JSON.stringify({uris:[item.uri]})
+        });
+        if(res.status===401){
+            const refreshed=await spotifyRefreshToken();
+            if(refreshed){
+                const retry=await fetch("https://api.spotify.com/v1/me/player/play?device_id="+encodeURIComponent(spotifyDeviceId),{method:"PUT",headers:{Authorization:"Bearer "+refreshed,"Content-Type":"application/json"},body:JSON.stringify({uris:[item.uri]})});
+                if(!retry.ok){let d={};try{d=await retry.json();}catch(e){}throw new Error(d.error?.message||"재생 요청 실패");}
+            }else throw new Error("Spotify 인증이 만료되었습니다.");
+        }else if(!res.ok){let d={};try{d=await res.json();}catch(e){}throw new Error(d.error?.message||"재생 요청 실패 (HTTP "+res.status+")");}
+        spotifySetStatus("Spotify 재생 중…");
+        setTimeout(spotifyFetchNowPlaying,700);
+    }catch(e){
+        console.error("[Spotify] play search result",e);
+        uiAlert("곡 재생 실패: "+(e.message||e)+"\n\nSpotify 권한에 user-modify-playback-state가 포함되어 있는지 확인해주세요.");
+    }
 }
 
 async function spotifyTransferToWeb(){
@@ -9726,6 +10957,361 @@ async function spotifyInit(){
 }
 
 spotifyInit();
+
+</script>
+
+<script>
+/* ===== ENTHNET CONTEXT MENU LOGIC ===== */
+(function(){
+    const menu = document.getElementById("enthContextMenu");
+    if(!menu) return;
+
+    const title = document.getElementById("enthContextTitle");
+    const postActions = document.getElementById("ctxPostActions");
+    const generalActions = document.getElementById("ctxGeneralActions");
+    const ownerActions = document.getElementById("ctxOwnerActions");
+    const bookmarkText = document.getElementById("ctxBookmarkText");
+
+    let contextPostId = null;
+    let contextPost = null;
+
+    const hide = () => {
+        menu.classList.remove("show");
+        menu.setAttribute("aria-hidden","true");
+        contextPostId = null;
+        contextPost = null;
+    };
+
+    function show(x,y){
+        menu.classList.add("show");
+        menu.setAttribute("aria-hidden","false");
+
+        const rect = menu.getBoundingClientRect();
+        const pad = 10;
+        let left = x;
+        let top = y;
+
+        if(left + rect.width > window.innerWidth - pad)
+            left = window.innerWidth - rect.width - pad;
+
+        if(top + rect.height > window.innerHeight - pad)
+            top = window.innerHeight - rect.height - pad;
+
+        menu.style.left = Math.max(pad,left) + "px";
+        menu.style.top = Math.max(pad,top) + "px";
+    }
+
+    function preparePostMenu(post){
+        contextPost = post;
+        contextPostId = post ? post.id : null;
+
+        postActions.style.display = post ? "block" : "none";
+        generalActions.style.display = post ? "none" : "block";
+
+        if(!post){
+            ownerActions.style.display = "none";
+            return;
+        }
+
+        title.textContent = "게시글 메뉴";
+
+        const mine =
+            typeof userId !== "undefined" &&
+            post.authorId === userId;
+
+        ownerActions.style.display = mine ? "block" : "none";
+
+        const saved =
+            typeof bookmarks !== "undefined" &&
+            bookmarks.includes(post.id);
+
+        bookmarkText.textContent = saved ? "저장 해제" : "저장";
+    }
+
+    function findPostFromTarget(target){
+        const el = target.closest(".post, .popular, .recent-item, .my-post");
+        if(!el) return null;
+
+        // 메인 게시글 카드에는 openPost('ID')가 들어 있으므로
+        // DOM의 onclick에서 ID를 추출하고 실제 posts 배열에서 찾는다.
+        const onclick = el.getAttribute("onclick") || "";
+        const match = onclick.match(/openPost\(['"]([^'"]+)['"]\)/);
+
+        if(match && typeof posts !== "undefined"){
+            return posts.find(p => String(p.id) === String(match[1])) || null;
+        }
+
+        // 상세 페이지 안에서 우클릭한 경우 현재 게시글 사용
+        if(el.closest(".detail") &&
+           typeof currentPostId !== "undefined" &&
+           typeof posts !== "undefined"){
+            return posts.find(p => String(p.id) === String(currentPostId)) || null;
+        }
+
+        return null;
+    }
+
+    document.addEventListener("contextmenu", function(e){
+        const input = e.target.closest(
+            "input, textarea, select, [contenteditable='true']"
+        );
+        if(input) return;
+
+        e.preventDefault();
+
+        const post = findPostFromTarget(e.target);
+
+        if(post){
+            preparePostMenu(post);
+        }else{
+            contextPost = null;
+            contextPostId = null;
+            postActions.style.display = "none";
+            generalActions.style.display = "block";
+            ownerActions.style.display = "none";
+
+            title.textContent =
+                e.target.closest(".detail")
+                ? "게시글 상세 메뉴"
+                : "엔쓰넷 메뉴";
+        }
+
+        show(e.clientX,e.clientY);
+    });
+
+    document.addEventListener("click", hide);
+    document.addEventListener("scroll", hide, true);
+    window.addEventListener("resize", hide);
+
+    document.addEventListener("keydown", function(e){
+        if(e.key === "Escape") hide();
+    });
+
+    menu.addEventListener("click", function(e){
+        e.stopPropagation();
+    });
+
+    // 게시글 메뉴 공통: 기존 기능을 그대로 사용한다.
+    function withContextPost(callback){
+        if(contextPostId === null) return;
+        if(typeof posts === "undefined") return;
+
+        const previous = typeof currentPostId !== "undefined"
+            ? currentPostId
+            : null;
+
+        currentPostId = contextPostId;
+
+        try{
+            callback();
+        }catch(err){
+            console.error("[ContextMenu]",err);
+            if(typeof uiAlert === "function")
+                uiAlert("작업을 실행하지 못했습니다.");
+        }
+
+        // 좋아요/싫어요/저장/수정/삭제는 기존 로직이 currentPostId를
+        // 기준으로 처리하므로 작업 직후에는 선택된 게시글을 유지한다.
+        // 신고 역시 모달에서 currentPostId를 사용한다.
+        if(previous !== null && currentPostId === null){
+            currentPostId = previous;
+        }
+    }
+
+    document.getElementById("ctxLike").addEventListener("click", function(){
+        withContextPost(() => {
+            if(typeof likePost === "function") likePost();
+        });
+        hide();
+    });
+
+    document.getElementById("ctxDislike").addEventListener("click", function(){
+        withContextPost(() => {
+            if(typeof dislikePost === "function") dislikePost();
+        });
+        hide();
+    });
+
+    document.getElementById("ctxBookmark").addEventListener("click", function(){
+        withContextPost(() => {
+            if(typeof toggleBookmark === "function") toggleBookmark();
+        });
+        hide();
+    });
+
+    document.getElementById("ctxReport").addEventListener("click", function(){
+        withContextPost(() => {
+            if(typeof openReport === "function") openReport();
+        });
+        hide();
+    });
+
+    document.getElementById("ctxEdit").addEventListener("click", function(){
+        withContextPost(() => {
+            if(typeof editCurrentPost === "function") editCurrentPost();
+        });
+        hide();
+    });
+
+    document.getElementById("ctxDelete").addEventListener("click", function(){
+        withContextPost(() => {
+            if(typeof deleteCurrentPost === "function") deleteCurrentPost();
+        });
+        hide();
+    });
+
+    document.getElementById("ctxBack").addEventListener("click", function(){
+        hide();
+        if(typeof history !== "undefined" && history.length > 1)
+            history.back();
+        else if(typeof goHome === "function")
+            goHome();
+    });
+
+    document.getElementById("ctxRefresh").addEventListener("click", function(){
+        hide();
+        window.location.reload();
+    });
+
+    document.getElementById("ctxHome").addEventListener("click", function(){
+        hide();
+        if(typeof goHome === "function")
+            goHome();
+        else
+            window.scrollTo({top:0,behavior:"smooth"});
+    });
+
+    document.getElementById("ctxTop").addEventListener("click", function(){
+        hide();
+        window.scrollTo({top:0,behavior:"smooth"});
+    });
+
+    document.getElementById("ctxCopyUrl").addEventListener("click", async function(){
+        hide();
+        try{
+            await navigator.clipboard.writeText(window.location.href);
+            if(typeof uiSuccess === "function")
+                uiSuccess("페이지 주소를 복사했습니다.");
+        }catch(e){
+            if(typeof uiAlert === "function")
+                uiAlert("주소 복사에 실패했습니다.");
+        }
+    });
+
+    document.getElementById("ctxTheme").addEventListener("click", function(){
+        hide();
+
+        const themeBtn = document.querySelector(
+            '[onclick*="toggleTheme"], [onclick*="toggleDark"], #themeBtn, #darkModeBtn'
+        );
+
+        if(themeBtn){
+            themeBtn.click();
+            return;
+        }
+
+        document.body.classList.toggle("dark");
+    });
+
+    document.getElementById("ctxClose").addEventListener("click", hide);
+})();
+</script>
+<script>
+/* ===== ENTHNET NETWORK STATUS ===== */
+(function(){
+    const overlay = document.getElementById("enthOfflineOverlay");
+    const refreshBtn = document.getElementById("enthOfflineRefreshBtn");
+    const guideBtn = document.getElementById("enthWifiGuideBtn");
+
+    if(!overlay) return;
+
+    let offlineShown = false;
+
+    function showOffline(){
+        if(offlineShown) return;
+        offlineShown = true;
+        overlay.classList.add("show");
+        document.body.style.overflow = "hidden";
+    }
+
+    function hideOffline(){
+        offlineShown = false;
+        overlay.classList.remove("show");
+        document.body.style.overflow = "";
+    }
+
+    function updateNetworkState(){
+        if(navigator.onLine){
+            hideOffline();
+        }else{
+            showOffline();
+        }
+    }
+
+    refreshBtn.addEventListener("click", function(){
+        window.location.reload();
+    });
+
+    const guideModal = document.getElementById("enthWifiGuideModal");
+    const guideClose = document.getElementById("enthWifiGuideClose");
+    const guideDone = document.getElementById("enthWifiGuideDone");
+
+    if(guideBtn){
+        guideBtn.addEventListener("click", function(){
+            const modal = document.getElementById("enthWifiGuideModal");
+            if(modal){
+                modal.classList.add("show");
+                document.body.style.overflow = "hidden";
+            }
+        });
+    }
+
+    function closeWifiGuide(){
+        const modal = document.getElementById("enthWifiGuideModal");
+        if(modal){
+            modal.classList.remove("show");
+            if(!document.getElementById("enthOfflineOverlay")?.classList.contains("show")){
+                document.body.style.overflow = "";
+            }
+        }
+    }
+
+    if(guideClose) guideClose.addEventListener("click", closeWifiGuide);
+    if(guideDone) guideDone.addEventListener("click", closeWifiGuide);
+
+    if(guideModal){
+        guideModal.addEventListener("click", function(e){
+            if(e.target === guideModal) closeWifiGuide();
+        });
+    }
+
+    document.addEventListener("keydown", function(e){
+        if(e.key === "Escape" && guideModal && guideModal.classList.contains("show")){
+            closeWifiGuide();
+        }
+    });
+
+    window.addEventListener("offline", showOffline);
+    window.addEventListener("online", hideOffline);
+
+    // 페이지 진입 시 이미 오프라인인 경우도 감지
+    if(!navigator.onLine){
+        showOffline();
+    }
+
+    // 네트워크가 복구되었는지 주기적으로 한 번 더 확인
+    // 브라우저의 online 이벤트가 늦게 들어오는 경우를 대비한다.
+    setInterval(function(){
+        if(navigator.onLine && offlineShown){
+            hideOffline();
+        }else if(!navigator.onLine && !offlineShown){
+            showOffline();
+        }
+    }, 3000);
+})();
+</script>
+
+
 
 </body>
     </html>
