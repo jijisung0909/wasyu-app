@@ -10910,12 +10910,20 @@ async function spotifyPlaySearchResult(index){
     }
 }
 
-async function spotifyTransferToWeb(){
+async function spotifyTransferToWeb(startPlayback=true){
     if(!spotifyDeviceId)return false;
     try{
-        await spotifyApi("/me/player",{method:"PUT",body:JSON.stringify({device_ids:[spotifyDeviceId],play:false})});
+        await spotifyApi("/me/player",{
+            method:"PUT",
+            body:JSON.stringify({device_ids:[spotifyDeviceId],play:!!startPlayback})
+        });
         return true;
-    }catch(e){console.error("[Spotify] transfer",e);return false;}
+    }catch(e){
+        console.error("[Spotify] transfer",e);
+        spotifySetStatus("Spotify 재생 이전 실패: "+(e&&e.message||e));
+        spotifySetDiagnostic("재생 이전 API 오류: "+(e&&e.message||e),true);
+        return false;
+    }
 }
 async function spotifyTogglePlay(){
     if(!spotifyPlayer || !spotifyDeviceId){
@@ -11018,19 +11026,41 @@ function spotifySetupPlayer(){
         },
         enableMediaSession:true
     });
-    spotifyPlayer.addListener("ready",({device_id})=>{
+    spotifyPlayer.addListener("ready",async({device_id})=>{
         spotifyDeviceId=device_id;
         spotifyRenderEmpty();
-        spotifySetStatus("엔쓰넷 웹 플레이어 준비됨 · ▶를 눌러 재생하세요");
-        spotifySetDiagnostic("Web Playback SDK 연결 완료 · EME 확인 중…", false);
+        spotifySetStatus("엔쓰넷 플레이어 연결됨 · 재생 기기 전환 중…");
+        spotifySetDiagnostic("Web Playback SDK 연결됨 · 현재 Spotify 재생을 엔쓰넷으로 전환합니다.", false);
         spotifyCheckEmeSupport().then(result=>{
             const host=(window.chrome&&window.chrome.webview)?"앱 내 WebView2":"브라우저 환경";
             const bad=result.indexOf("실패")>=0||result.indexOf("없음")>=0;
-            spotifySetDiagnostic(host+" · "+result+(bad?" · 앱의 보호 콘텐츠 재생 지원 문제일 수 있습니다.":""), bad);
+            spotifySetDiagnostic(host+" · "+result+(bad?" · 보호 콘텐츠 재생 지원이 부족할 수 있습니다.":""), bad);
         }).catch(e=>spotifySetDiagnostic("EME 검사 실패: "+(e&&e.message||e)));
-        /* 로그인 직후 기존 Spotify 앱의 소리를 자동으로 빼앗지 않는다.
-           사용자가 ▶를 눌렀을 때 현재 곡을 이 기기로 전송한다. */
-        setTimeout(spotifyFetchNowPlaying,1000);
+
+        /* 현재 Spotify 앱에서 듣고 있는 곡을 엔쓰넷 Web Playback 기기로 이전하고 재생한다. */
+        const transferred=await spotifyTransferToWeb(true);
+        if(!transferred){
+            spotifySetStatus("엔쓰넷 플레이어 연결됨 · 재생 이전 실패");
+            spotifySetDiagnostic("Spotify 재생 기기로 이전하지 못했습니다. 기존 Spotify 앱에서 곡이 재생 중인지 확인하고 엔쓰넷 재생 버튼을 눌러보세요.", true);
+        }else{
+            spotifySetStatus("엔쓰넷 플레이어 · 재생 요청 완료");
+            spotifySetDiagnostic("재생 기기 이전 요청을 보냈습니다. 플레이어 상태 확인 중…", false);
+        }
+        setTimeout(async()=>{
+            try{
+                const state=await spotifyPlayer.getCurrentState();
+                if(state&&state.track_window&&state.track_window.current_track){
+                    spotifySetStatus(state.paused?"엔쓰넷 플레이어 · 일시정지":"엔쓰넷 플레이어 · 재생 중");
+                    spotifySetDiagnostic(state.paused?"엔쓰넷 플레이어에 곡이 로드됐지만 일시정지 상태입니다.":"엔쓰넷 플레이어에서 재생 상태를 확인했습니다.",false);
+                }else{
+                    spotifySetStatus("재생 기기는 연결됐지만 곡 상태가 없습니다");
+                    spotifySetDiagnostic("재생 이전 요청 후에도 Web Playback SDK가 곡 상태를 보내지 않습니다. 앱의 보호 콘텐츠(EME/Widevine) 지원을 확인해야 합니다.",true);
+                }
+            }catch(e){
+                spotifySetDiagnostic("플레이어 상태 조회 실패: "+(e&&e.message||e),true);
+            }
+            spotifyFetchNowPlaying();
+        },1800);
     });
     spotifyPlayer.addListener("not_ready",({device_id})=>{
         if(device_id===spotifyDeviceId)spotifyDeviceId="";
