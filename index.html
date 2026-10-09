@@ -10784,8 +10784,26 @@ async function spotifyFetchNowPlaying(){
                 <div class="spotify-np-album">${escapeHTML(item.album?.name||"")}</div>
                 <a class="spotify-np-link" href="${escapeHTML(url)}" target="_blank" rel="noopener">Spotify에서 열기 ↗</a>
             </div>`;
-        status.textContent=data.is_playing?"Spotify 연결됨 · 지금 재생 중":"Spotify 연결됨 · 일시정지";
-        spotifyUpdatePlayButton(!!data.is_playing);
+        /* currently-playing은 Spotify 데스크톱 앱의 곡도 반환한다.
+           재생 버튼 상태는 반드시 엔쓰넷 Web Playback SDK의 상태로 표시한다. */
+        let localState=null;
+        try{
+            if(spotifyPlayer && typeof spotifyPlayer.getCurrentState === "function"){
+                localState=await spotifyPlayer.getCurrentState();
+            }
+        }catch(stateError){
+            console.debug("[Spotify] local player state",stateError);
+        }
+        const localHasTrack=!!(localState && localState.track_window && localState.track_window.current_track);
+        const localIsPlaying=!!(localHasTrack && !localState.paused);
+        if(localHasTrack){
+            status.textContent=localIsPlaying?"엔쓰넷 웹 플레이어 · 재생 중":"엔쓰넷 웹 플레이어 · 일시정지";
+        }else if(data.is_playing){
+            status.textContent="Spotify 앱에서 재생 중 · ▶를 누르면 엔쓰넷에서 이어 듣기";
+        }else{
+            status.textContent="곡 정보 확인됨 · ▶를 누르면 엔쓰넷에서 재생";
+        }
+        spotifyUpdatePlayButton(localIsPlaying);
     }catch(e){console.error("[Spotify] now playing",e);}
 }
 
@@ -10869,9 +10887,13 @@ async function spotifyTransferToWeb(){
     }catch(e){console.error("[Spotify] transfer",e);return false;}
 }
 async function spotifyTogglePlay(){
-    if(!spotifyPlayer)return;
+    if(!spotifyPlayer || !spotifyDeviceId){
+        spotifySetStatus("엔쓰넷 웹 플레이어 연결을 기다리는 중…");
+        uiAlert("엔쓰넷 웹 플레이어가 아직 준비되지 않았습니다. 잠시 후 다시 눌러주세요.");
+        return;
+    }
     try{
-        /* 사용자 클릭을 이용해 앱 창의 오디오 재생 권한을 먼저 활성화한다. */
+        /* 이 함수는 재생 버튼의 직접 클릭에서 호출한다. 비동기 요청 전에 오디오를 활성화한다. */
         try{
             if(typeof spotifyPlayer.activateElement === "function"){
                 const activation=spotifyPlayer.activateElement();
@@ -10880,12 +10902,43 @@ async function spotifyTogglePlay(){
                 }
             }
         }catch(e){console.debug("[Spotify] audio activation",e);}
-        await spotifyPlayer.togglePlay();
-        setTimeout(spotifyFetchNowPlaying,500);
+
+        /* 먼저 엔쓰넷 플레이어 자체에 곡이 있는지 확인한다. */
+        let localState=null;
+        try{
+            if(typeof spotifyPlayer.getCurrentState === "function"){
+                localState=await spotifyPlayer.getCurrentState();
+            }
+        }catch(stateError){
+            console.debug("[Spotify] local state before play",stateError);
+        }
+
+        if(localState && localState.track_window && localState.track_window.current_track){
+            await spotifyPlayer.togglePlay();
+        }else{
+            /* currently-playing API의 곡은 외부 Spotify 앱에서 나온 것일 수 있다.
+               곡 메타데이터만 보여주지 말고 해당 곡을 엔쓰넷 플레이어로 실제 전송·재생한다. */
+            const active=await spotifyApi("/me/player");
+            const track=active && active.item;
+            if(!track || !track.uri){
+                throw new Error("재생할 곡이 없습니다. Spotify 앱에서 곡을 재생하거나 엔쓰넷의 검색에서 곡을 선택해주세요.");
+            }
+            const payload={uris:[track.uri]};
+            const progress=Number(active.progress_ms);
+            if(Number.isFinite(progress) && progress>=0)payload.position_ms=progress;
+            await spotifyApi("/me/player/play?device_id="+encodeURIComponent(spotifyDeviceId),{
+                method:"PUT",
+                body:JSON.stringify(payload)
+            });
+        }
+
+        spotifySetStatus("엔쓰넷 웹 플레이어에서 재생 중…");
+        setTimeout(spotifyFetchNowPlaying,700);
+        setTimeout(spotifyFetchNowPlaying,1500);
     }catch(e){
-        console.error("[Spotify] toggle play",e);
-        spotifySetStatus("재생이 차단되었어요 · 재생 버튼을 다시 눌러보세요");
-        uiAlert("재생 제어에 실패했습니다: "+(e.message||e)+"\n\n앱 브라우저의 오디오 활성화 제한일 수 있어요. 재생 버튼을 한 번 더 눌러보세요.");
+        console.error("[Spotify] toggle/play on NthNet device",e);
+        spotifySetStatus("재생 실패: "+(e.message||e));
+        uiAlert("엔쓰넷 웹 플레이어에서 재생하지 못했습니다: "+(e.message||e)+"\n\nSpotify Premium 및 계정의 재생 권한, 앱의 보호 콘텐츠(EME) 지원 여부를 확인해주세요.");
     }
 }
 async function spotifyNext(){
@@ -10913,10 +10966,12 @@ function spotifySetupPlayer(){
         },
         enableMediaSession:true
     });
-    spotifyPlayer.addListener("ready",async({device_id})=>{
+    spotifyPlayer.addListener("ready",({device_id})=>{
         spotifyDeviceId=device_id;
         spotifyRenderEmpty();
-        await spotifyTransferToWeb();
+        spotifySetStatus("엔쓰넷 웹 플레이어 준비됨 · ▶를 눌러 재생하세요");
+        /* 로그인 직후 기존 Spotify 앱의 소리를 자동으로 빼앗지 않는다.
+           사용자가 ▶를 눌렀을 때 현재 곡을 이 기기로 전송한다. */
         setTimeout(spotifyFetchNowPlaying,1000);
     });
     spotifyPlayer.addListener("not_ready",({device_id})=>{
@@ -10931,7 +10986,10 @@ function spotifySetupPlayer(){
     spotifyPlayer.addListener("initialization_error",({message})=>uiAlert("Spotify 웹 플레이어 초기화 실패: "+message));
     spotifyPlayer.addListener("authentication_error",({message})=>uiAlert("Spotify 인증 오류: "+message));
     spotifyPlayer.addListener("account_error",({message})=>uiAlert("Spotify 계정 오류: "+message));
-    spotifyPlayer.addListener("playback_error",({message})=>console.error("[Spotify] playback",message));
+    spotifyPlayer.addListener("playback_error",({message})=>{
+        console.error("[Spotify] playback",message);
+        spotifySetStatus("Spotify 재생 오류: "+(message||"알 수 없는 오류"));
+    });
     spotifyPlayer.addListener("autoplay_failed",()=>{
         spotifySetStatus("자동 재생 제한 · 엔쓰넷의 재생 버튼을 눌러주세요");
         console.info("[Spotify] autoplay blocked; waiting for direct user interaction");
