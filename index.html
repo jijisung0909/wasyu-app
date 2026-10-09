@@ -10831,6 +10831,13 @@ async function spotifyPlaySearchResult(index){
     const item=items[index];
     if(!item?.uri)return;
     if(!spotifyDeviceId){uiAlert("웹 플레이어가 아직 준비되지 않았습니다. Spotify 연결을 먼저 완료해주세요.");return;}
+    /* 설치형 PWA/모바일 브라우저는 사용자 동작 없이 시작한 오디오를 차단할 수 있다.
+       검색 결과 클릭 시, 비동기 요청 전에 SDK 오디오 요소를 활성화한다. */
+    try{
+        if(spotifyPlayer && typeof spotifyPlayer.activateElement === "function"){
+            spotifyPlayer.activateElement().catch(e=>console.debug("[Spotify] audio activation",e));
+        }
+    }catch(e){console.debug("[Spotify] audio activation",e);}
     try{
         const token=await spotifyGetToken();
         if(!token)throw new Error("Spotify 로그인이 필요합니다.");
@@ -10863,7 +10870,23 @@ async function spotifyTransferToWeb(){
 }
 async function spotifyTogglePlay(){
     if(!spotifyPlayer)return;
-    try{await spotifyPlayer.togglePlay();setTimeout(spotifyFetchNowPlaying,500);}catch(e){uiAlert("재생 제어에 실패했습니다: "+e.message);}
+    try{
+        /* 사용자 클릭을 이용해 앱 창의 오디오 재생 권한을 먼저 활성화한다. */
+        try{
+            if(typeof spotifyPlayer.activateElement === "function"){
+                const activation=spotifyPlayer.activateElement();
+                if(activation && typeof activation.catch === "function"){
+                    activation.catch(e=>console.debug("[Spotify] audio activation",e));
+                }
+            }
+        }catch(e){console.debug("[Spotify] audio activation",e);}
+        await spotifyPlayer.togglePlay();
+        setTimeout(spotifyFetchNowPlaying,500);
+    }catch(e){
+        console.error("[Spotify] toggle play",e);
+        spotifySetStatus("재생이 차단되었어요 · 재생 버튼을 다시 눌러보세요");
+        uiAlert("재생 제어에 실패했습니다: "+(e.message||e)+"\n\n앱 브라우저의 오디오 활성화 제한일 수 있어요. 재생 버튼을 한 번 더 눌러보세요.");
+    }
 }
 async function spotifyNext(){
     if(!spotifyPlayer)return;
@@ -10909,7 +10932,10 @@ function spotifySetupPlayer(){
     spotifyPlayer.addListener("authentication_error",({message})=>uiAlert("Spotify 인증 오류: "+message));
     spotifyPlayer.addListener("account_error",({message})=>uiAlert("Spotify 계정 오류: "+message));
     spotifyPlayer.addListener("playback_error",({message})=>console.error("[Spotify] playback",message));
-    spotifyPlayer.addListener("autoplay_failed",()=>uiAlert("브라우저가 자동 재생을 막았습니다. 재생 버튼을 한 번 눌러주세요."));
+    spotifyPlayer.addListener("autoplay_failed",()=>{
+        spotifySetStatus("자동 재생 제한 · 엔쓰넷의 재생 버튼을 눌러주세요");
+        console.info("[Spotify] autoplay blocked; waiting for direct user interaction");
+    });
     spotifyPlayer.connect().then(ok=>{
         if(!ok)uiAlert("Spotify 웹 플레이어 연결에 실패했습니다. Spotify Premium 계정과 Web Playback SDK 설정을 확인해주세요.");
     });
